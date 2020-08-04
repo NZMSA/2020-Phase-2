@@ -12,5 +12,9 @@ namespace phase_2_back_end.Database
         {
 
         }
+
+        public DbSet<Picture> Pictures { get; set; }
+        public DbSet<Row> Rows { get; set; }
+        public DbSet<Column> Columns { get; set; }
     }
 }
