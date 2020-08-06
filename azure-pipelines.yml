@@ -20,14 +20,14 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 - script: |
-    cd ./phase-2-front-end
+    cd $(ReactRootFolder)
     npm install
     npm run build
     cd ..
   displayName: 'npm install and build'
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: 'phase-2-front-end/build'
+    rootFolderOrFile: $(ReactBuildFolder)
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/FrontEnd/$(Build.BuildId).zip'
