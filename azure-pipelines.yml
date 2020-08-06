@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  ProjectPath: 'phase-2-back-end/phase-2-back-end/phase-2-back-end.csproj'
+  SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
   publishDir: 'phase-2-back-end/phase-2-back-end/bin/Debug/netcoreapp3.1/publish'
 
 steps:
@@ -18,21 +18,22 @@ steps:
   displayName: 'Build API'
   inputs:
     command: 'build'
-    projects: $(ProjectPath)
+    projects: $(SolutionPath)
+
 - task: DotNetCoreCLI@2
+  displayName: 'Publish and zip API'
   inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: '$(ProjectPath)'
-    zipAfterPublish: false
-    modifyOutputPath: false
-- task: ArchiveFiles@2
+    command: publish
+    publishWebProjects: False
+    projects: $(SolutionPath)
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+- task: PublishBuildArtifacts@1
   inputs:
-    rootFolderOrFile: '$(publishDir)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
