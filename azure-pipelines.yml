@@ -15,17 +15,20 @@ variables:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'Build API'
+  displayName: 'dotnet build'
   inputs:
     command: 'build'
     projects: $(SolutionPath)
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish and Zip'
+  displayName: 'dotnet publish'
   inputs:
-    command: 'publish'
-    projects: $(SolutionPath)
+    command: publish
     publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '-o $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+    modifyOutputPath: true
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
