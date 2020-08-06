@@ -9,11 +9,17 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
+  buildDir: 
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Build API'
+  inputs:
+    command: 'build'
+    projects: $(SolutionPath)
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
