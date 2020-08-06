@@ -19,12 +19,19 @@ steps:
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
+# - script: |
+#     cd $(ReactRootFolder)
+#     npm install
+#     npm run build
+#     cd ..
+#   displayName: 'npm install and build'
 - script: |
     cd $(ReactRootFolder)
     npm install
     npm run build
     cd ..
   displayName: 'npm install and build'
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(ReactBuildFolder)'
