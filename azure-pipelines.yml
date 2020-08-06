@@ -20,7 +20,7 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 - script: |
-    cd: $(ReactRootFolder)
+    cd $(ReactRootFolder)
     npm install
     npm run build
     cd ..
