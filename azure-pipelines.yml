@@ -21,19 +21,9 @@ steps:
     projects: $(SolutionPath)
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish and zip API'
   inputs:
-    command: publish
-    publishWebProjects: False
-    projects: $(SolutionPath)
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-
+    command: 'publish'
+    publishWebProjects: false
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
