@@ -15,15 +15,14 @@ variables:
   ReactBuildFolder: '$(ReactRootFolder)/build'
   
 steps:
-# - task: NodeTool@0
-#   inputs:
-#     versionSpec: '10.x'
-#   displayName: 'Install Node.js'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 - script: |
     cd $(ReactRootFolder)
-    yarn install
-    yarn add typescript
-    yarn build
+    npm install
+    npm run build
     cd ..
   displayName: 'npm install and build'
 - task: ArchiveFiles@2
