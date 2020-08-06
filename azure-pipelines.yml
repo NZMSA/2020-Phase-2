@@ -22,6 +22,7 @@ steps:
 - script: |
     cd $(ReactRootFolder)
     yarn install
+    yarn add typescript
     yarn build
     cd ..
   displayName: 'npm install and build'
