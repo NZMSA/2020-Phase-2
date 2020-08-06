@@ -20,7 +20,7 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 - script: |
-    cd phase-2-front-end
+    cd ./phase-2-front-end
     npm install
     npm run build
     cd ..
