@@ -11,26 +11,49 @@ pool:
 
 variables:
   SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
-  publishDir: 'phase-2-back-end/phase-2-back-end/bin/Debug/netcoreapp3.1/publish'
-
+  ReactRootFolder: 'phase-2-front-end'
+  ReactBuildFolder: $(ReactRootFolder)/build
 steps:
+- task: UseNode@1
+  displayName: 'Install node.js'
+  inputs:
+    checkLatest: true
+- script: |
+    cd: $(ReactRootFolder)
+    npm install
+    npm run build
+    cd ..
+  displayName: 'npm install and build'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(ReactBuildFolder)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/FrontEnd/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/FrontEnd'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
     command: 'build'
     projects: $(SolutionPath)
-
 - task: DotNetCoreCLI@2
   displayName: 'dotnet publish'
   inputs:
     command: publish
     publishWebProjects: false
     projects: '**/*.csproj'
-    arguments: '-o $(Build.ArtifactStagingDirectory)'
+    arguments: '-o $(Build.ArtifactStagingDirectory)/BackEnd'
     zipAfterPublish: true
     modifyOutputPath: true
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/BackEnd'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+  
