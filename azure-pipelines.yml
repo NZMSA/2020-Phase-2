@@ -13,11 +13,12 @@ variables:
   SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
   ReactRootFolder: 'phase-2-front-end'
   ReactBuildFolder: $(ReactRootFolder)/build
+  
 steps:
-- task: UseNode@1
-  displayName: 'Install node.js'
+- task: NodeTool@0
   inputs:
-    checkLatest: true
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 - script: |
     cd: $(ReactRootFolder)
     npm install
