@@ -12,26 +12,19 @@ pool:
 variables:
   SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
   ReactRootFolder: 'phase-2-front-end'
-  ReactBuildFolder: $(ReactRootFolder)/build
+  ReactBuildFolder: '$(ReactRootFolder)/build'
   
 steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-# - script: |
-#     cd $(ReactRootFolder)
-#     npm install
-#     npm run build
-#     cd ..
-#   displayName: 'npm install and build'
 - script: |
     cd $(ReactRootFolder)
     npm install
     npm run build
     cd ..
   displayName: 'npm install and build'
-
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(ReactBuildFolder)'
