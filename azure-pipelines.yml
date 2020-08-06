@@ -35,7 +35,7 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/FrontEnd'
-    ArtifactName: 'drop'
+    ArtifactName: 'front-end'
     publishLocation: 'Container'
 
 - task: DotNetCoreCLI@2
@@ -55,6 +55,6 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/BackEnd'
-    ArtifactName: 'drop'
+    ArtifactName: 'back-end'
     publishLocation: 'Container'
   
