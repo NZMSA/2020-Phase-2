@@ -21,8 +21,10 @@ steps:
     projects: $(SolutionPath)
 
 - task: DotNetCoreCLI@2
+  displayName: 'Publish and Zip'
   inputs:
     command: 'publish'
+    projects: $(SolutionPath)
     publishWebProjects: false
 - task: PublishBuildArtifacts@1
   inputs:
