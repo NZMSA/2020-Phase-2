@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using phase_2_back_end.Database;
 
 namespace phase_2_back_end.Migrations
 {
     [DbContext(typeof(ApplicationDatabase))]
-    partial class ApplicationDatabaseModelSnapshot : ModelSnapshot
+    [Migration("20200810075230_Improved table structure")]
+    partial class Improvedtablestructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

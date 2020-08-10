@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace phase_2_back_end.Database
 {
-    public class Picture
+    public class Canvas
     {
         [Required]
         [Key]
         public int PictureID { get; set; }
 
         [Required]
-        public ICollection<Row> Rows { get; set; }
+        public ICollection<Matrix> Rows { get; set; }
     }
 }

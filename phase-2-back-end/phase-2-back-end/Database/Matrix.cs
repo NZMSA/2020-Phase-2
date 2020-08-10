@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace phase_2_back_end.Database
 {
-    public class Column
+    public class Matrix
     {
         [Required]
         [Key]
-        public int ColumnID { get; set; }
+        public int RowID { get; set; }
 
         [Required]
-        public float rgb { get; set; }
+        public int Row { get; set; }
+        [Required]
+        public int Column { get; set; }
+        [Required]
+        public string Hex { get; set; }
     }
 }
