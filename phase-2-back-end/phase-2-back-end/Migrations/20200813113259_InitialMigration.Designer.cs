@@ -10,8 +10,8 @@ using phase_2_back_end.Database;
 namespace phase_2_back_end.Migrations
 {
     [DbContext(typeof(ApplicationDatabase))]
-    [Migration("20200810075230_Improved table structure")]
-    partial class Improvedtablestructure
+    [Migration("20200813113259_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,48 +23,48 @@ namespace phase_2_back_end.Migrations
 
             modelBuilder.Entity("phase_2_back_end.Database.Canvas", b =>
                 {
-                    b.Property<int>("PictureID")
+                    b.Property<int>("CanvasID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasKey("PictureID");
+                    b.HasKey("CanvasID");
 
                     b.ToTable("Canvas");
                 });
 
-            modelBuilder.Entity("phase_2_back_end.Database.Matrix", b =>
+            modelBuilder.Entity("phase_2_back_end.Database.ColorData", b =>
                 {
-                    b.Property<int>("RowID")
+                    b.Property<int>("ColorDataID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CanvasPictureID")
+                    b.Property<int?>("CanvasID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Column")
+                    b.Property<int>("ColumnIndex")
                         .HasColumnType("int");
 
                     b.Property<string>("Hex")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Row")
+                    b.Property<int>("RowIndex")
                         .HasColumnType("int");
 
-                    b.HasKey("RowID");
+                    b.HasKey("ColorDataID");
 
-                    b.HasIndex("CanvasPictureID");
+                    b.HasIndex("CanvasID");
 
-                    b.ToTable("Matrices");
+                    b.ToTable("ColorData");
                 });
 
-            modelBuilder.Entity("phase_2_back_end.Database.Matrix", b =>
+            modelBuilder.Entity("phase_2_back_end.Database.ColorData", b =>
                 {
                     b.HasOne("phase_2_back_end.Database.Canvas", null)
-                        .WithMany("Rows")
-                        .HasForeignKey("CanvasPictureID");
+                        .WithMany("ColorData")
+                        .HasForeignKey("CanvasID");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,9 +10,9 @@ namespace phase_2_back_end.Database
     {
         [Required]
         [Key]
-        public int PictureID { get; set; }
+        public int CanvasID { get; set; }
 
         [Required]
-        public ICollection<Matrix> Rows { get; set; }
+        public ICollection<ColorData> ColorData { get; set; }
     }
 }
