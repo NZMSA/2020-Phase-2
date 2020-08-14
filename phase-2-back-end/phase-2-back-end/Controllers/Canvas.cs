@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using phase_2_back_end.Database;
 
@@ -16,11 +20,13 @@ namespace phase_2_back_end.Controllers
     public class Canvas : ControllerBase
     {
         private ApplicationDatabase _context;
+        private IConfiguration _config;
         private int SIZE = 32;
 
-        public Canvas(ApplicationDatabase context)
+        public Canvas(ApplicationDatabase context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         [HttpGet]
@@ -49,7 +55,7 @@ namespace phase_2_back_end.Controllers
 
             return JsonConvert.SerializeObject(outputArray);
         }
-        [HttpPost]
+        [HttpPut]
         [Route("UpdateCell")]
         public void UpdateCell([FromBody] UpdateCellModel data)
         {
@@ -63,6 +69,31 @@ namespace phase_2_back_end.Controllers
             _context.SaveChanges();
         }
 
+
+        [HttpPut]
+        [Route("ClearCanvas")]
+        public String ClearCanvas([FromQuery] string psd)
+        {
+            var password = ComputeSha256Hah(psd, _config["SHA256:Salt"]);
+            if(password == _config["SHA256:Password"])
+            {
+                var canvas = _context.Canvas
+                .Include(c => c.ColorData)
+                .OrderByDescending(c => c.CanvasID)
+                .FirstOrDefault();
+                foreach (var tableRow in canvas.ColorData)
+                {
+                    tableRow.Hex = "#FFFFFF";
+                }
+                _context.SaveChanges();
+                return "All done";
+            }
+            else
+            {
+                return "Nice try but you are unauthorized";
+            }
+            
+        }
         [HttpPost]
         [Route("PopulateDb_dont_run_this_unnecessarily")]
         public void PopulateDb()
@@ -83,12 +114,29 @@ namespace phase_2_back_end.Controllers
             _context.Canvas.Add(new Database.Canvas { ColorData = matrix});
             _context.SaveChanges();
         }
+        public static string ComputeSha256Hah(string psd, string Salt)
+        {
+            using (SHA256 Hash = SHA256.Create())
+            {
+                string RawData = string.Format("{1}{0}{1}", psd, Salt);
+                byte[] bytes = Hash.ComputeHash(Encoding.UTF8.GetBytes(RawData));
+
+                //Converts the bytes array into a string
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
     }
 
     public class UpdateCellModel
     {
         public int Row { get; set; }
         public int Column { get; set; }
+        [Required]
         public String Hex { get; set; }
     }
 }
