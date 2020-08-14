@@ -14,6 +14,6 @@ namespace phase_2_back_end.Database
         }
 
         public DbSet<Canvas> Canvas { get; set; }
-        public DbSet<Matrix> Matrices { get; set; }
+        public DbSet<ColorData> ColorData { get; set; }
     }
 }
