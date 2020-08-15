@@ -3,8 +3,8 @@ import { SketchPicker } from 'react-color';
 import { Button, Paper } from '@material-ui/core';
 
 interface PickerProps {
-    selectedElement: { i: number, j: number, colour:string},
-    modifyArray: (props: { position: { i: number, j: number }, colour: string }) => void
+    selectedElement: { row: number, col: number, colour:string},
+    modifyArray: (props: { position: { row: number, col: number }, colour: string }) => void
     closeModal: () => void
 }
 
@@ -31,7 +31,7 @@ export default (props: PickerProps) => {
             />
             <Button style={{ marginTop: 10 }} variant="contained" color="primary"
                 onClick={() => {
-                    props.modifyArray({ position: { i: props.selectedElement.i, j: props.selectedElement.j}, colour: background });
+                    props.modifyArray({ position: { row: props.selectedElement.row, col: props.selectedElement.col}, colour: background });
                     props.closeModal();
                 }}>
                 Confirm Selection

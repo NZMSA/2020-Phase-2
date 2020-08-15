@@ -25,7 +25,7 @@ const App = () => {
     getArrayAsync()
   }, [colourArray, changeArray])
 
-  const modifyColour = async (props: { position: { i: number, j: number }, colour: string }) => {
+  const modifyColour = async (props: { position: { row: number, col: number }, colour: string }) => {
     await modifyArray(props);
     setChangeArray(true)
   }

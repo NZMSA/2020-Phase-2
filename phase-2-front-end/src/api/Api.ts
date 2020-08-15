@@ -8,12 +8,12 @@ export const getArray = async () => {
 }
 
 interface ModifyProps {
-    position: { i: number, j: number }
+    position: { row: number, col: number }
     colour: string
 }
 
-export const modifyArray = async ({ position, colour }: ModifyProps) => {
-    const body = JSON.stringify({"row": position.i, "column": position.j, "hex":colour})
+export const modifyArray = async ({ position: {row, col}, colour }: ModifyProps) => {
+    const body = JSON.stringify({"row": row, "column": col, "hex":colour})
     await fetch("https://msa-2020-api.azurewebsites.net/api/Canvas/UpdateCell", {
         body,
         headers: {

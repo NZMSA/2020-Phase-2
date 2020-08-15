@@ -4,12 +4,12 @@ import ColorPicker from '../ColorPicker/ColorPicker';
 
 interface IGridProps {
     colourArray: string[][]
-    modifyArray: (props: { position: { i: number, j: number }, colour: string }) => void
+    modifyArray: (props: { position: { row: number, col: number }, colour: string }) => void
 }
 
 const GridComponent = (props: IGridProps) => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedElement, setSelectedElement] = useState({ i: -1, j: -1, colour: "#ffffff" });
+    const [selectedElement, setSelectedElement] = useState({ row: -1, col: -1, colour: "#ffffff" });
     const singleCellSize = (600 / 32) - 2;
     const cells = [];
     const addFilter = (e: any) => {
@@ -23,8 +23,8 @@ const GridComponent = (props: IGridProps) => {
             cells.push(
                 <div
                     key={i + "," + j}
-                    data-i={i}
-                    data-j={j}
+                    data-row={i}
+                    data-col={j}
                     data-colour={props.colourArray[i][j]}
                     className= "cell"
                     style={{
@@ -35,15 +35,15 @@ const GridComponent = (props: IGridProps) => {
                     onMouseEnter={addFilter}
                     onMouseLeave={removeFilter}
                     onClick={event => {
-                        const innerI = event.currentTarget.getAttribute("data-i");
-                        const innerJ = event.currentTarget.getAttribute("data-j");
+                        const dataRow = event.currentTarget.getAttribute("data-row");
+                        const dataCol = event.currentTarget.getAttribute("data-col");
                         const colour = event.currentTarget.getAttribute("data-colour")
-                        if (!innerI || !innerJ || !colour) {
+                        if (!dataRow || !dataCol || !colour) {
                             return
                         }
-                        const iVal = parseInt(innerI, 10);
-                        const jVal = parseInt(innerJ, 10);
-                        setSelectedElement({ i: iVal, j: jVal, colour })
+                        const row = parseInt(dataRow, 10);
+                        const col = parseInt(dataCol, 10);
+                        setSelectedElement({ row, col, colour })
                         setModalOpen(true);
                     }}
                 />)
