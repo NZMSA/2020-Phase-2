@@ -17,13 +17,13 @@ namespace phase_2_back_end.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Canvas : ControllerBase
+    public class CanvasController : ControllerBase
     {
         private ApplicationDatabase _context;
         private IConfiguration _config;
         private int SIZE = 32;
 
-        public Canvas(ApplicationDatabase context, IConfiguration config)
+        public CanvasController(ApplicationDatabase context, IConfiguration config)
         {
             _context = context;
             _config = config;
