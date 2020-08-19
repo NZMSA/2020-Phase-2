@@ -10,8 +10,8 @@ namespace phase_2_back_end.Models
     public class Canvas
     {
         [Required]
-        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int CanvasID { get; set; }
 
         [Required]

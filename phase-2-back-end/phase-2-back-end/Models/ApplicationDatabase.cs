@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace phase_2_back_end.Database
+namespace phase_2_back_end.Models
 {
     public class ApplicationDatabase : DbContext
     {
@@ -22,6 +22,16 @@ namespace phase_2_back_end.Database
            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
            .AddJsonFile("appsettings.json")
            .Build();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Canvas>()
+                .Property(p => p.CanvasID)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<ColorData>()
+                .Property(p => p.ColorDataID)
+                .ValueGeneratedOnAdd();
         }
     }
 }

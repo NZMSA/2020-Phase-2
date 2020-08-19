@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using phase_2_back_end.Database;
+using phase_2_back_end.Models;
 
 namespace phase_2_back_end
 {
