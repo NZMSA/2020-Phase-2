@@ -13,8 +13,10 @@ namespace phase_2_back_end.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int CanvasID { get; set; }
+        public string Name { get; set; }
+        public int Score { get; set; }
 
-        [Required]
+        // foreign key to Color Data
         public ICollection<ColorData> ColorData { get; set; }
     }
 }

@@ -20,5 +20,10 @@ namespace phase_2_back_end.Models
         public int ColumnIndex { get; set; }
         [Required]
         public string Hex { get; set; }
+
+        // 1 canvas has many ColorData-s
+        [Required]
+        public int CanvasID { get; set; }
+        public Canvas Canvas { get; set; }
     }
 }
