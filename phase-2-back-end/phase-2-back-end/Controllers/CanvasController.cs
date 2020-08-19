@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using phase_2_back_end.Database;
+using phase_2_back_end.Models;
 
 namespace phase_2_back_end.Controllers
 {
@@ -111,7 +111,7 @@ namespace phase_2_back_end.Controllers
                     };
                 }
             }
-            _context.Canvas.Add(new Database.Canvas { ColorData = matrix});
+            _context.Canvas.Add(new Models.Canvas { ColorData = matrix});
             _context.SaveChanges();
         }
         public static string ComputeSha256Hah(string psd, string Salt)
