@@ -55,14 +55,14 @@ namespace phase_2_back_end.Controllers
         }
 
         // To save a new canvas
-        [HttpPost]
-        public async Task<ActionResult<Canvas>> PostCanvas(Canvas canvas)
-        {
-            _context.Canvas.Add(canvas);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<Canvas>> PostCanvas(Canvas canvas)
+        //{
+        //    _context.Canvas.Add(canvas);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = canvas.CanvasID }, canvas);
-        }
+        //    return CreatedAtAction("GetStudent", new { id = canvas.CanvasID }, canvas);
+        //}
 
         [HttpPut]
         [Route("UpdateCell")]
@@ -104,27 +104,27 @@ namespace phase_2_back_end.Controllers
             
         }
 
-        // to populate a mock Canvas
-		//[HttpPost]
-		//[Route("PopulateDb_dont_run_this_unnecessarily")]
-		//public void PopulateDb()
-		//{
-		//	var matrix = new ColorData[SIZE * SIZE];
-		//	for (int i = 0; i < SIZE; i++)
-		//	{
-		//		for (int j = 0; j < SIZE; j++)
-		//		{
-		//			matrix[SIZE * i + j] = new ColorData
-		//			{
-		//				RowIndex = i,
-		//				ColumnIndex = j,
-		//				Hex = "#FFFFFF"
-		//			};
-		//		}
-		//	}
-		//	_context.Canvas.Add(new Models.Canvas { ColorData = matrix });
-		//	_context.SaveChanges();
-		//}
+		// to populate a mock Canvas
+		[HttpPost]
+		[Route("PopulateDb_dont_run_this_unnecessarily")]
+		public void PopulateDb()
+		{
+			var matrix = new ColorData[SIZE * SIZE];
+			for (int i = 0; i < SIZE; i++)
+			{
+				for (int j = 0; j < SIZE; j++)
+				{
+					matrix[SIZE * i + j] = new ColorData
+					{
+						RowIndex = i,
+						ColumnIndex = j,
+						Hex = "#FFFFFF"
+					};
+				}
+			}
+			_context.Canvas.Add(new Models.Canvas { ColorData = matrix });
+			_context.SaveChanges();
+		}
 		public static string ComputeSha256Hah(string psd, string Salt)
         {
             using (SHA256 Hash = SHA256.Create())
