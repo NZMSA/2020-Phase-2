@@ -1,0 +1,22 @@
+json object
+{
+  "canvasID": 5,
+  "name": "test",
+  "score": 0,
+  "colorData": [
+    {
+      "colorDataID": 2055,
+      "rowIndex": 2,
+      "columnIndex": 0,
+      "hex": "#35fc03",
+      "canvasID": 5
+    },
+    {
+      "colorDataID": 2056,
+      "rowIndex": 4,
+      "columnIndex": 0,
+      "hex": "#35fc03",
+      "canvasID": 5
+    }
+  ]
+}

@@ -29,40 +29,97 @@ namespace phase_2_back_end.Controllers
             _config = config;
         }
 
-        [HttpGet]
-        [Route("GetCanvas")]
-        public String GetCanvas()
+		// This GET method will return only the latest canvas in the db
+
+		[HttpGet]
+		[Route("GetCanvas")]
+		public String GetCanvas()
+		{
+			string[,] outputArray = new string[32, 32];
+			var canvas = _context.Canvas
+				.Include(c => c.ColorData)
+				.OrderByDescending(c => c.CanvasID)
+				.FirstOrDefault();
+
+			var colorData = canvas.ColorData
+				.OrderBy(c => c.RowIndex)
+				.ThenBy(c => c.ColumnIndex)
+				.ToArray();
+            
+			for (int i = 0; i < SIZE; i++)
+			{
+				for (int j = 0; j < SIZE; j++)
+				{
+					outputArray[i, j] = colorData[SIZE * i + j].Hex;
+				}
+			}
+			return JsonConvert.SerializeObject(outputArray);
+		}
+
+        [HttpPost]
+        public async Task<ActionResult<Canvas>> PostCanvasTest(Canvas canvas)
         {
-            string[,] outputArray = new string[32,32];
-            var canvas = _context.Canvas
-                .Include(c => c.ColorData)
-                .OrderByDescending(c => c.CanvasID)
-                .FirstOrDefault();
+            _context.Canvas.Add(canvas);
+            await _context.SaveChangesAsync();
 
-            var colorData = canvas.ColorData
-                .OrderBy(c => c.RowIndex)
-                .ThenBy(c => c.ColumnIndex)
-                .ToArray();
-
-            for(int i=0; i<SIZE; i++)
-            {
-                for(int j=0; j<SIZE; j++)
-                {
-                    outputArray[i, j] = colorData[SIZE * i + j].Hex;
-                }
-            }
-            return JsonConvert.SerializeObject(outputArray);
+            return CreatedAtAction("GetCanvasTest", new { id = canvas.CanvasID }, canvas);
         }
 
-        // To save a new canvas
-        //[HttpPost]
-        //public async Task<ActionResult<Canvas>> PostCanvas(Canvas canvas)
-        //{
-        //    _context.Canvas.Add(canvas);
-        //    await _context.SaveChangesAsync();
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Canvas>> GetCanvasTest(int id)
+        {
+            var canvas = await _context.Canvas
+                .Include(c => c.ColorData)
+                .FirstOrDefaultAsync(c => c.CanvasID == id);
 
-        //    return CreatedAtAction("GetStudent", new { id = canvas.CanvasID }, canvas);
-        //}
+            if (canvas == null)
+            {
+                return NotFound();
+            }
+            return canvas;
+        }
+
+        // To save changes of a full canvas
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutWholeCanvas(int id, Canvas canvas)
+        {
+            if (id != canvas.CanvasID)
+            {
+                return BadRequest();
+            }
+
+            var updateCanvas = await _context.Canvas.FirstOrDefaultAsync(s => s.CanvasID == canvas.CanvasID);
+            
+            _context.Entry(updateCanvas).State = EntityState.Modified;
+
+            updateCanvas.Name = canvas.Name;
+            updateCanvas.Score = canvas.Score;
+            updateCanvas.ColorData = canvas.ColorData;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CanvasExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // to check if the Canvas exist
+        private bool CanvasExists(int id)
+        {
+            return _context.Canvas.Any(e => e.CanvasID == id);
+        }
 
         [HttpPut]
         [Route("UpdateCell")]

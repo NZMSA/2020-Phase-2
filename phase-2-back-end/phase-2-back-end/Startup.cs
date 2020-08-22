@@ -68,10 +68,9 @@ namespace phase_2_back_end
 
             app.UseRouting();
 
-            app.UseCors(MyAllowSpecificOrigins);
+			app.UseCors(MyAllowSpecificOrigins);
 
-
-            app.UseAuthorization();
+			app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
