@@ -15,6 +15,7 @@ namespace phase_2_back_end.Models
 
         public DbSet<Canvas> Canvas { get; set; }
         public DbSet<ColorData> ColorData { get; set; }
+        public DbSet<ColorData> HistoricalData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +32,10 @@ namespace phase_2_back_end.Models
 
             modelBuilder.Entity<ColorData>()
                 .Property(p => p.ColorDataID)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<HistoricalData>()
+                .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
         }
     }

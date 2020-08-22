@@ -80,40 +80,40 @@ namespace phase_2_back_end.Controllers
         }
 
         // To save changes of a full canvas
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutWholeCanvas(int id, Canvas canvas)
-        {
-            if (id != canvas.CanvasID)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutWholeCanvas(int id, Canvas canvas)
+        //{
+        //    if (id != canvas.CanvasID)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            var updateCanvas = await _context.Canvas.FirstOrDefaultAsync(s => s.CanvasID == canvas.CanvasID);
+        //    var updateCanvas = await _context.Canvas.FirstOrDefaultAsync(s => s.CanvasID == canvas.CanvasID);
             
-            _context.Entry(updateCanvas).State = EntityState.Modified;
+        //    _context.Entry(updateCanvas).State = EntityState.Modified;
 
-            updateCanvas.Name = canvas.Name;
-            updateCanvas.Score = canvas.Score;
-            updateCanvas.ColorData = canvas.ColorData;
+        //    updateCanvas.Name = canvas.Name;
+        //    updateCanvas.Score = canvas.Score;
+        //    updateCanvas.ColorData = canvas.ColorData;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CanvasExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!CanvasExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // to check if the Canvas exist
         private bool CanvasExists(int id)
@@ -132,9 +132,9 @@ namespace phase_2_back_end.Controllers
                 .ColorData
                 .First(row => row.RowIndex == data.Row && row.ColumnIndex == data.Column);
             tableRow.Hex = data.Hex;
+
             _context.SaveChanges();
         }
-
 
         [HttpPut]
         [Route("ClearCanvas")]
