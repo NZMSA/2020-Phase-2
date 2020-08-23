@@ -101,7 +101,7 @@ namespace phase_2_back_end.Models
                 }
             }
 
-            // Save audit entities that have all the modifications
+            // Save historical data entities that have all the modifications
             foreach (var historicalDataEntry in historicalDataEntries.Where(_ => !_.HasTemporaryProperties))
             {
                 HistoricalData.Add(historicalDataEntry.ToHistoricalData());
@@ -111,30 +111,30 @@ namespace phase_2_back_end.Models
             return historicalDataEntries.Where(_ => _.HasTemporaryProperties).ToList();
         }
 
-        private Task OnAfterSaveChanges(List<HistoricalDataEntry> auditEntries)
+        private Task OnAfterSaveChanges(List<HistoricalDataEntry> historicalDataEntries)
         {
-            if (auditEntries == null || auditEntries.Count == 0)
+            if (historicalDataEntries == null || historicalDataEntries.Count == 0)
             {
                 return Task.CompletedTask;
             }
 
-            foreach (var auditEntry in auditEntries)
+            foreach (var historicalDataEntry in historicalDataEntries)
             {
                 // Get the final value of the temporary properties
-                foreach (var prop in auditEntry.TemporaryProperties)
+                foreach (var prop in historicalDataEntry.TemporaryProperties)
                 {
                     if (prop.Metadata.IsPrimaryKey())
                     {
-                        auditEntry.KeyValues[prop.Metadata.Name] = prop.CurrentValue;
+                        historicalDataEntry.KeyValues[prop.Metadata.Name] = prop.CurrentValue;
                     }
                     else
                     {
-                        auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                        historicalDataEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
                     }
                 }
 
-                // Save the Audit entry
-                HistoricalData.Add(auditEntry.ToHistoricalData());
+                // Save the Historical entry
+                HistoricalData.Add(historicalDataEntry.ToHistoricalData());
             }
             return SaveChangesAsync();
         }

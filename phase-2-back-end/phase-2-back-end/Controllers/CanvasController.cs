@@ -56,15 +56,6 @@ namespace phase_2_back_end.Controllers
 			return JsonConvert.SerializeObject(outputArray);
 		}
 
-        [HttpPost]
-        public async Task<ActionResult<Canvas>> PostCanvasTest(Canvas canvas)
-        {
-            _context.Canvas.Add(canvas);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCanvasTest", new { id = canvas.CanvasID }, canvas);
-        }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Canvas>> GetCanvasTest(int id)
         {
@@ -79,62 +70,11 @@ namespace phase_2_back_end.Controllers
             return canvas;
         }
 
-        // To save changes of a full canvas
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutWholeCanvas(int id, Canvas canvas)
-        //{
-        //    if (id != canvas.CanvasID)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var updateCanvas = await _context.Canvas.FirstOrDefaultAsync(s => s.CanvasID == canvas.CanvasID);
-            
-        //    _context.Entry(updateCanvas).State = EntityState.Modified;
-
-        //    updateCanvas.Name = canvas.Name;
-        //    updateCanvas.Score = canvas.Score;
-        //    updateCanvas.ColorData = canvas.ColorData;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!CanvasExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
         // to check if the Canvas exist
         private bool CanvasExists(int id)
         {
             return _context.Canvas.Any(e => e.CanvasID == id);
         }
-
-        //[HttpPut]
-        //[Route("UpdateCell")]
-        //public void UpdateCell([FromBody] UpdateCellModel data)
-        //{
-        //    var tableRow = _context.Canvas
-        //        .Include(c => c.ColorData)
-        //        .OrderByDescending(c => c.CanvasID)
-        //        .FirstOrDefault()
-        //        .ColorData
-        //        .First(row => row.RowIndex == data.Row && row.ColumnIndex == data.Column);
-        //    tableRow.Hex = data.Hex;
-
-        //    _context.SaveChanges();
-        //}
 
         [HttpPut]
         [Route("UpdateCell")]
