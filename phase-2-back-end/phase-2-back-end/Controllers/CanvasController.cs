@@ -121,9 +121,24 @@ namespace phase_2_back_end.Controllers
             return _context.Canvas.Any(e => e.CanvasID == id);
         }
 
+        //[HttpPut]
+        //[Route("UpdateCell")]
+        //public void UpdateCell([FromBody] UpdateCellModel data)
+        //{
+        //    var tableRow = _context.Canvas
+        //        .Include(c => c.ColorData)
+        //        .OrderByDescending(c => c.CanvasID)
+        //        .FirstOrDefault()
+        //        .ColorData
+        //        .First(row => row.RowIndex == data.Row && row.ColumnIndex == data.Column);
+        //    tableRow.Hex = data.Hex;
+
+        //    _context.SaveChanges();
+        //}
+
         [HttpPut]
         [Route("UpdateCell")]
-        public void UpdateCell([FromBody] UpdateCellModel data)
+        public async Task<IActionResult> UpdateCell([FromBody] UpdateCellModel data)
         {
             var tableRow = _context.Canvas
                 .Include(c => c.ColorData)
@@ -133,7 +148,8 @@ namespace phase_2_back_end.Controllers
                 .First(row => row.RowIndex == data.Row && row.ColumnIndex == data.Column);
             tableRow.Hex = data.Hex;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpPut]
