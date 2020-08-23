@@ -1,0 +1,17 @@
+.grid {
+    border: 5px solid black;
+    height: 600px;
+    width: 600px;
+    margin: 0 auto;
+    padding: 0px;
+    font-size: 0px;
+    background-color: black;
+}
+
+.cell {
+    border: 1px solid black;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: content-box;
+}
