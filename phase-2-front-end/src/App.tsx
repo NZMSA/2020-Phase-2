@@ -6,13 +6,11 @@ import './App.css';
 const App = () => {
   const [colourArray, setColourArray] = useState<any>([])
   const [changeArray, setChangeArray] = useState<boolean>(false);
-  const [timer, setTimer] = useState<any>(null);
+
   
   useEffect(() => {
-    if(!timer){
-      setTimer(setInterval(() => setChangeArray(true), 10000));
-    }
-  }, [timer, changeArray])
+    setInterval(() => setChangeArray(true), 10000);
+  }, [])
 
   useEffect(() => {
     async function getArrayAsync() {
