@@ -7,11 +7,6 @@ const App = () => {
   const [colourArray, setColourArray] = useState<any>([])
   const [changeArray, setChangeArray] = useState<boolean>(false);
 
-  
-  useEffect(() => {
-    setInterval(() => setChangeArray(true), 10000);
-  }, [])
-
   useEffect(() => {
     async function getArrayAsync() {
       if (!colourArray || colourArray.length === 0 || changeArray) {
@@ -20,6 +15,7 @@ const App = () => {
         setChangeArray(false);
       }
     }
+
     getArrayAsync()
   }, [colourArray, changeArray])
 
@@ -30,7 +26,7 @@ const App = () => {
 
   return (
     <div>
-      <Grid colourArray={colourArray} modifyArray={modifyColour} />
+      <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
     </div>
   )
 }
