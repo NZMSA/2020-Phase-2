@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using phase_2_back_end.Database;
+using phase_2_back_end.Models;
 
 namespace phase_2_back_end.Migrations
 {
     [DbContext(typeof(ApplicationDatabase))]
-    [Migration("20200813113259_InitialMigration")]
+    [Migration("20200817102902_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

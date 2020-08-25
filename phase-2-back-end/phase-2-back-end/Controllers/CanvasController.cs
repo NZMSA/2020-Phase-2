@@ -11,53 +11,74 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using phase_2_back_end.Database;
+using phase_2_back_end.Models;
 
 namespace phase_2_back_end.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Canvas : ControllerBase
+    public class CanvasController : ControllerBase
     {
         private ApplicationDatabase _context;
         private IConfiguration _config;
         private int SIZE = 32;
 
-        public Canvas(ApplicationDatabase context, IConfiguration config)
+        public CanvasController(ApplicationDatabase context, IConfiguration config)
         {
             _context = context;
             _config = config;
         }
 
-        [HttpGet]
-        [Route("GetCanvas")]
-        public String GetCanvas()
+		// This GET method will return only the latest canvas in the db
+
+		[HttpGet]
+		[Route("GetCanvas")]
+		public String GetCanvas()
+		{
+			string[,] outputArray = new string[32, 32];
+			var canvas = _context.Canvas
+				.Include(c => c.ColorData)
+				.OrderByDescending(c => c.CanvasID)
+				.FirstOrDefault();
+
+			var colorData = canvas.ColorData
+				.OrderBy(c => c.RowIndex)
+				.ThenBy(c => c.ColumnIndex)
+				.ToArray();
+            
+			for (int i = 0; i < SIZE; i++)
+			{
+				for (int j = 0; j < SIZE; j++)
+				{
+					outputArray[i, j] = colorData[SIZE * i + j].Hex;
+				}
+			}
+			return JsonConvert.SerializeObject(outputArray);
+		}
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Canvas>> GetCanvasTest(int id)
         {
-            string[,] outputArray = new string[32,32];
-            var canvas = _context.Canvas
+            var canvas = await _context.Canvas
                 .Include(c => c.ColorData)
-                .OrderByDescending(c => c.CanvasID)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync(c => c.CanvasID == id);
 
-            var colorData = canvas.ColorData
-                .OrderBy(c => c.RowIndex)
-                .ThenBy(c => c.ColumnIndex)
-                .ToArray();
-
-            for(int i=0; i<SIZE; i++)
+            if (canvas == null)
             {
-                for(int j=0; j<SIZE; j++)
-                {
-                    outputArray[i, j] = colorData[SIZE * i + j].Hex;
-                }
+                return NotFound();
             }
-
-
-            return JsonConvert.SerializeObject(outputArray);
+            return canvas;
         }
+
+        // to check if the Canvas exist
+        private bool CanvasExists(int id)
+        {
+            return _context.Canvas.Any(e => e.CanvasID == id);
+        }
+
         [HttpPut]
         [Route("UpdateCell")]
-        public void UpdateCell([FromBody] UpdateCellModel data)
+        public async Task<IActionResult> UpdateCell([FromBody] UpdateCellModel data)
         {
             var tableRow = _context.Canvas
                 .Include(c => c.ColorData)
@@ -66,9 +87,10 @@ namespace phase_2_back_end.Controllers
                 .ColorData
                 .First(row => row.RowIndex == data.Row && row.ColumnIndex == data.Column);
             tableRow.Hex = data.Hex;
-            _context.SaveChanges();
-        }
 
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
         [HttpPut]
         [Route("ClearCanvas")]
@@ -94,27 +116,29 @@ namespace phase_2_back_end.Controllers
             }
             
         }
-        [HttpPost]
-        [Route("PopulateDb_dont_run_this_unnecessarily")]
-        public void PopulateDb()
-        {
-            var matrix = new ColorData[SIZE * SIZE];
-            for(int i=0; i<SIZE; i++)
-            {
-                for(int j=0; j<SIZE; j++)
-                {
-                    matrix[SIZE * i + j] = new ColorData
-                    {
-                        RowIndex = i,
-                        ColumnIndex = j,
-                        Hex = "#FFFFFF"
-                    };
-                }
-            }
-            _context.Canvas.Add(new Database.Canvas { ColorData = matrix});
-            _context.SaveChanges();
-        }
-        public static string ComputeSha256Hah(string psd, string Salt)
+
+		// to populate a mock Canvas
+		[HttpPost]
+		[Route("PopulateDb_dont_run_this_unnecessarily")]
+		public void PopulateDb()
+		{
+			var matrix = new ColorData[SIZE * SIZE];
+			for (int i = 0; i < SIZE; i++)
+			{
+				for (int j = 0; j < SIZE; j++)
+				{
+					matrix[SIZE * i + j] = new ColorData
+					{
+						RowIndex = i,
+						ColumnIndex = j,
+						Hex = "#FFFFFF"
+					};
+				}
+			}
+			_context.Canvas.Add(new Models.Canvas { ColorData = matrix });
+			_context.SaveChanges();
+		}
+		public static string ComputeSha256Hah(string psd, string Salt)
         {
             using (SHA256 Hash = SHA256.Create())
             {
