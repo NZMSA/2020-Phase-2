@@ -54,6 +54,7 @@ const GridComponent = (props: IGridProps) => {
   return (
     <>
       <div className="grid">{cells}</div>
+      {/* only render the color picker if it is editable */}
       {props.canEdit && (
         <Modal
           open={modalOpen}
