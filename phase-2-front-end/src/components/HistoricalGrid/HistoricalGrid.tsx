@@ -4,6 +4,7 @@ import _ from "lodash";
 
 // core components
 import Grid from "../Grid/Grid";
+import CircularProgress from '../CircularProgress/CircularProgress'
 // api
 import { ITransformedHistoricalData, getHistoricalData, getCanvasById, IHistoricalDataDates } from "../../api/Api";
 // utils
@@ -63,7 +64,7 @@ const HistoricalGrid = () => {
   const handlePrev = () => {
     if (canvasModifiedDates && historicalData && colors && currDateIdx !== undefined && selectedCanvasId !== undefined) {
       const modifiedDates = canvasModifiedDates[selectedCanvasId];
-      const currDate = modifiedDates[currDateIdx]
+      const currDate = modifiedDates[currDateIdx];
 
       const updatedCells = historicalData[selectedCanvasId][currDate];
       const colorsDeepCopy = _.cloneDeep(colors);
@@ -80,7 +81,7 @@ const HistoricalGrid = () => {
   const handleNext = () => {
     if (canvasModifiedDates && historicalData && colors && currDateIdx !== undefined && selectedCanvasId !== undefined) {
       const modifiedDates = canvasModifiedDates[selectedCanvasId];
-      const nextDateIdx = currDateIdx + 1
+      const nextDateIdx = currDateIdx + 1;
       const nextDate = modifiedDates[nextDateIdx];
 
       const updatedCells = historicalData[selectedCanvasId][nextDate];
@@ -100,8 +101,9 @@ const HistoricalGrid = () => {
   // NOTE: currDateIdx and selectedCanvasId are numbers, so 0 evaluates
   // to false, therefore need to check them against undefined
   return !isLoading && historicalData && colors && canvasModifiedDates && selectedCanvasId !== undefined && currDateIdx !== undefined ? (
-    <React.Fragment>
+    <main style={{ textAlign: "center" }}>
       <header>
+        <Typography variant="h6">List of Canvas IDs:</Typography>
         {Object.keys(historicalData).map((canvasId, idx) => (
           <Button key={idx} onClick={() => onClickCanvasId(Number(canvasId))}>
             {canvasId}
@@ -113,20 +115,23 @@ const HistoricalGrid = () => {
       </Container>
       <footer>
         <Typography variant="h6">{canvasModifiedDates[selectedCanvasId][currDateIdx]}</Typography>
-        {currDateIdx > 0 && (
-          <Button variant="contained" onClick={() => handlePrev()}>
-            Previous
-          </Button>
-        )}
-        {currDateIdx < canvasModifiedDates[selectedCanvasId].length - 1 && (
-          <Button variant="contained" color="primary" onClick={() => handleNext()}>
-            Next
-          </Button>
-        )}
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          {currDateIdx > 0 && (
+            <Button variant="contained" onClick={() => handlePrev()}>
+              Last Date
+            </Button>
+          )}
+          {currDateIdx < canvasModifiedDates[selectedCanvasId].length - 1 && (
+            <Button variant="contained" color="primary" onClick={() => handleNext()}>
+              Next Date
+            </Button>
+          )}
+        </div>
       </footer>
-    </React.Fragment>
+    </main>
   ) : (
-    <div>Loading...</div>
+    // center the progress at the center of the screen
+    <CircularProgress />
   );
 };
 
