@@ -3,7 +3,7 @@ import moment from "moment";
 import _ from "lodash";
 
 import Grid from "../Grid/Grid";
-import { getArray } from "../../api/Api";
+import { Button, Typography, Container } from "@material-ui/core";
 
 // NOTE: nitpick on the model field naming, should change
 // oldValues, newValues and keyValues to singular instead
@@ -116,6 +116,7 @@ const getCanvasById = async (id: number): Promise<ICanvasData> => {
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
+// all the dates value in the array are sorted from earliest to the latest already
 const transformHistoricalData = (historicalDataArray: IHistoricalData[]): ITransformedHistoricalData => {
   const result: ITransformedHistoricalData = {};
 
@@ -171,6 +172,7 @@ const historicalDataDates = (histData: ITransformedHistoricalData): IHistoricalD
 const extractColors = (canvas: ICanvasData): string[][] => {
   // assume it is a square grid
   const gridSize = Math.sqrt(canvas.colorData.length);
+  // init a gridSize by gridSize array filled with '' strings
   const colors: string[][] = [...Array(gridSize)].map((_) => Array(gridSize).fill(""));
 
   // first sort by row index, then by the column index
@@ -185,12 +187,14 @@ const extractColors = (canvas: ICanvasData): string[][] => {
 };
 
 // TODO: restructure the code and put them in a separate folder and files
+// NOTE: the current method of processing the data and rendering the component is very inefficient
 
 // TODO: explain the thought process
 const HistoricalGrid = () => {
   const [colors, setColors] = useState<string[][]>([]);
   // assuming the canvasID starts from 1
-  const [canvasID, setcanvasID] = useState<number>(1);
+  const [selectedCanvasId, setSelectedCanvasId] = useState(1);
+  const [currDateIdx, setCurrDateIdx] = useState(0);
   const [historicalData, setHisotricalData] = useState<ITransformedHistoricalData>({});
   const [canvasModifiedDates, setCanvasModifiedDates] = useState<IHistoricalDataDates>({});
 
@@ -200,13 +204,13 @@ const HistoricalGrid = () => {
     const transformedHistData = transformHistoricalData(hist);
     setHisotricalData(transformedHistData);
 
-    // choosing the first one in the dictionary due to personal preference
-    const firstCanvasIdKey = Number(Object.keys(transformHistoricalData)[0]);
-    setcanvasID(firstCanvasIdKey);
-
     // set the modified dates of each canvas
     const modifiedDates = historicalDataDates(transformedHistData);
     setCanvasModifiedDates(modifiedDates);
+
+    // choosing the first one in the dictionary due to personal preference
+    const firstCanvasIdKey = Number(Object.keys(transformHistoricalData)[0]);
+    setSelectedCanvasId(firstCanvasIdKey);
   };
 
   useEffect(() => {
@@ -215,20 +219,80 @@ const HistoricalGrid = () => {
   }, []);
 
   // fetch the latest copy of canvas whenever canvasID is updated
+  // and reset the date to the latest one of the modified dates
   useEffect(() => {
     (async () => {
-      const canvas = await getCanvasById(canvasID);
+      const canvas = await getCanvasById(selectedCanvasId);
       const colorsArray = extractColors(canvas);
+      const latestModifiedDates = canvasModifiedDates[canvas.canvasID];
+
+      setCurrDateIdx(latestModifiedDates.length - 1);
       setColors(colorsArray);
     })();
-  }, [canvasID]);
+  }, [selectedCanvasId]);
 
   // TODO: finish these 2 functions
-  const handlePrev = () => {};
-  const handleNext = () => {};
-  const onClickCanvasId = (newId: number) => setcanvasID(newId);
+  const handlePrev = () => {
+    const modifiedDates = canvasModifiedDates[selectedCanvasId];
+    // decrement the index and wrap it inside the length
+    const prevDateIdx = (currDateIdx - 1) % modifiedDates.length;
+    const prevDate = modifiedDates[prevDateIdx];
+    const updatedCells = historicalData[selectedCanvasId][prevDate];
 
-  return <Grid colourArray={colors} />;
+    const colorsDeepCopy = _.cloneDeep(colors);
+    updatedCells.forEach((cell) => {
+      // change the current cell to the old color
+      const { row, col, oldHex } = cell;
+      colorsDeepCopy[row][col] = oldHex;
+    });
+
+    setColors(colorsDeepCopy);
+    setCurrDateIdx(prevDateIdx);
+  };
+
+  const handleNext = () => {
+    const modifiedDates = canvasModifiedDates[selectedCanvasId];
+    // increment the index and wrap it inside the length
+    const nextDateIdx = (currDateIdx + 1) % modifiedDates.length;
+    const nextDate = modifiedDates[nextDateIdx];
+    const updatedCells = historicalData[selectedCanvasId][nextDate];
+
+    const colorsDeepCopy = _.cloneDeep(colors);
+    updatedCells.forEach((cell) => {
+      // change the current cell to the new color
+      const { row, col, newHex } = cell;
+      colorsDeepCopy[row][col] = newHex;
+    });
+
+    setColors(colorsDeepCopy);
+    setCurrDateIdx(nextDateIdx);
+  };
+
+  const onClickCanvasId = (newId: number) => setSelectedCanvasId(newId);
+
+  return (
+    <React.Fragment>
+      <header>
+        {Object.keys(historicalData).map((canvasId, idx) => (
+          <Button key={idx} onClick={() => onClickCanvasId(Number(canvasId))}>
+            {canvasId}
+          </Button>
+        ))}
+      </header>
+      <Container maxWidth="md">
+        <Grid colourArray={colors} />
+      </Container>
+      <footer>
+        <Typography variant="h4">{canvasModifiedDates[selectedCanvasId][currDateIdx]}</Typography>
+        <Button variant="contained" onClick={() => handlePrev()}>
+          Previous
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => handleNext()}>
+          Next
+        </Button>
+      </footer>
+    </React.Fragment>
+  );
 };
 
 export default HistoricalGrid;
