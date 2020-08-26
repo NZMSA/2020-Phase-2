@@ -30,7 +30,7 @@ const LatestGrid = () => {
     setChangeArray(true);
   };
 
-  return isLoading ? <CircularProgress /> : <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+  return <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
 };
 
 export default LatestGrid;
