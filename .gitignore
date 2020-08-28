@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 5042e2e2b526d566240b89ba4612e88dfe89db3e
 # Created by https://www.toptal.com/developers/gitignore/api/aspnetcore
 # Edit at https://www.toptal.com/developers/gitignore?templates=aspnetcore
 
@@ -277,8 +273,4 @@ __pycache__/
 # tools/
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
-<<<<<<< HEAD
 phase-2-back-end/.vs/phase-2-back-end/v16/.suo
-=======
-phase-2-back-end/.vs/phase-2-back-end/v16/.suo
->>>>>>> 5042e2e2b526d566240b89ba4612e88dfe89db3e
