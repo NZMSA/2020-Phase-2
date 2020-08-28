@@ -1,38 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { getArray, modifyArray } from './api/Api';
-import Grid from './components/Grid/Grid'
-import './App.css';
+import React from "react";
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+
+import HistoricalGrid from "./components/HistoricalGrid/HistoricalGrid";
+import LatestGrid from "./components/LatestGrid/LatestGrid";
+import Header from './components/Header/Header';
+
+import "./App.css";
 
 const App = () => {
-  const [colourArray, setColourArray] = useState<any>([])
-  const [changeArray, setChangeArray] = useState<boolean>(false);
-
-  
-  useEffect(() => {
-    setInterval(() => setChangeArray(true), 10000);
-  }, [])
-
-  useEffect(() => {
-    async function getArrayAsync() {
-      if (!colourArray || colourArray.length === 0 || changeArray) {
-        const res = await getArray();
-        setColourArray(res);
-        setChangeArray(false);
-      }
-    }
-    getArrayAsync()
-  }, [colourArray, changeArray])
-
-  const modifyColour = async (props: { position: { row: number, col: number }, colour: string }) => {
-    await modifyArray(props);
-    setChangeArray(true)
-  }
-
-  return (
-    <div>
-      <Grid colourArray={colourArray} modifyArray={modifyColour} />
+  return <div>
+    <Header/><BrowserRouter>
+  <Switch>
+    <Route path='/history' component={HistoricalGrid} />
+    <Route path='/' component={LatestGrid} />
+  </Switch>
+  </BrowserRouter>
     </div>
-  )
-}
+};
 
 export default App;
