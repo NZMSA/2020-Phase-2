@@ -39,7 +39,8 @@ namespace phase_2_back_end
                                   {
                                       builder.WithOrigins("https://signalr-frontend-prototype-msa2020.azurewebsites.net")
                                                             .AllowAnyHeader()
-                                                            .AllowAnyMethod();
+                                                            .AllowAnyMethod()
+                                                            .AllowCredentials();
                                   });
             });
             services.AddControllers();
