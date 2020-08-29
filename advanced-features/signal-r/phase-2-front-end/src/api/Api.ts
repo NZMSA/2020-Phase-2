@@ -1,9 +1,6 @@
-const API_BASE_URL =
-  process.env.NODE_ENV === "development" ? "https://localhost:44301/api/" : "https://msa-2020-api.azurewebsites.net/api/";
-
-const CANVAS_API_URL = API_BASE_URL + "Canvas/";
-const HISTORICAL_DATA_URL = API_BASE_URL + "HistoricalDatas/";
-const COLOR_DATA_URL = API_BASE_URL + "ColorDatas/";
+const CANVAS_API_URL = process.env.REACT_APP_API_BASE_URL + "/api/Canvas/";
+const HISTORICAL_DATA_URL = process.env.REACT_APP_API_BASE_URL + "/api/HistoricalDatas/";
+const COLOR_DATA_URL = process.env.REACT_APP_API_BASE_URL + "/api/ColorDatas/";
 
 export const getArray = async () => {
   let response = await fetch(CANVAS_API_URL + "GetCanvas", {
