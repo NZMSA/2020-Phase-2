@@ -37,7 +37,7 @@ namespace phase_2_back_end
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins(Configuration["AllowedHosts"])
+                                      builder.WithOrigins("https://signalr-frontend-prototype-msa2020.azurewebsites.net")
                                                             .AllowAnyHeader()
                                                             .AllowAnyMethod();
                                   });
