@@ -37,7 +37,7 @@ namespace phase_2_back_end
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:3000")
+                                      builder.WithOrigins(Configuration["AllowedHosts"])
                                                             .AllowAnyHeader()
                                                             .AllowAnyMethod();
                                   });
