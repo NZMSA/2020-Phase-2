@@ -63,7 +63,7 @@ namespace phase_2_back_end
 
             app.UseSwaggerUI(x =>
             {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api - SignalR");
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api");
             });
 
             app.UseHttpsRedirection();
