@@ -18,8 +18,8 @@ const LatestGrid = () => {
         console.log("Successfully connected to signalR hub.")
 
         // Bind event handlers to connection.
-        connection.on("NewUserConnection", () => {
-          console.log("new uesr joined the session");
+        connection.on("NewUserConnection", (clientIp: string) => {
+          console.log("New uesr joined the session - IP: " + clientIp);
         });
 
       } catch (error) {
