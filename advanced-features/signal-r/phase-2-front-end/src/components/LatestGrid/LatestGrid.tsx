@@ -60,7 +60,6 @@ const LatestGrid = () => {
   const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
     // await modifyArray(props);
     // setChangeArray(true);
-    setIsLoading(true);
     hubConnection?.invoke("UpdateColourArray", JSON.stringify(props)).catch(err => console.error(err));
   };
 
