@@ -71,7 +71,12 @@ namespace phase_2_back_end
 
             app.UseRouting();
 
-			app.UseCors("CorsPolicy");
+			app.UseCors(builder => {
+                builder.WithOrigins("https://signalr-frontend-prototype-msa2020.azurewebsites.net")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
 
 			app.UseAuthorization();
 
