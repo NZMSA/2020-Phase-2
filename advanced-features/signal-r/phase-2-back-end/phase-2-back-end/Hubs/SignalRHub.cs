@@ -10,12 +10,12 @@ namespace phase_2_back_end.Hubs
     {
         public static class CurrentSession
         {
-            public static string ColourArray;
+            public static string[][] ColourArray;
         }
 
         public override async Task OnConnectedAsync()
         {
-            string clientIp = Context.GetHttpContext().Connection.RemoteIpAddress.MapToIPv6().ToString();
+            string clientIp = Context.GetHttpContext().Request.Host.Host;
             await Clients.Others.SendAsync("NewUserConnection", clientIp);
 
             if (CurrentSession.ColourArray == null)
@@ -26,7 +26,10 @@ namespace phase_2_back_end.Hubs
             await base.OnConnectedAsync();
         }
 
-        
+        public void SetColourArray(string[][] colourArray)
+        {
+            CurrentSession.ColourArray = colourArray;
+        }
 
 
     }
