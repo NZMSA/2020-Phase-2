@@ -15,7 +15,7 @@ namespace phase_2_back_end.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            string clientIp = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
+            string clientIp = Context.GetHttpContext().Connection.RemoteIpAddress.MapToIPv6().ToString();
             await Clients.Others.SendAsync("NewUserConnection", clientIp);
 
             if (CurrentSession.ColourArray == null)
