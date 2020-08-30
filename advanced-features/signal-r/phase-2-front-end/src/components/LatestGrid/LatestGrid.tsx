@@ -14,17 +14,23 @@ const LatestGrid = () => {
     const createHubConnection = async () => {
       const connection = new HubConnectionBuilder().withUrl(process.env.REACT_APP_API_BASE_URL! + "/hub").configureLogging(LogLevel.Information).build()
       try{
-        await connection.start()
-        console.log("Successfully connected to signalR hub.")
+        await connection.start();
+        console.log("Successfully connected to signalR hub.");
 
-        // connection.on("InitializeSession", async () => {
-        //   const res = await getArray();
-        // });
-
-        // Bind event handlers to connection.
-        connection.on("NewUserConnection", (clientIp: string) => {
-          console.log("New uesr joined the session - IP: " + clientIp);
+        connection.on("InitializeColorArray", async () => {
+          const res:string[][] = await getArray();
+          setColourArray(res);
+          connection.invoke("SetColourArray", res).catch(err => console.error(err));
         });
+        
+        connection.on("UpdateColorArray", (colorArray) => {
+          setColourArray(colorArray);
+        });
+
+        connection.on("NewUserConnection", (clientIp: string) => {
+          console.log("New user joined the session - IP: " + clientIp);
+        });
+
 
       } catch (error) {
         console.log("Error establishing connection to signalR hub: " + { error });
@@ -39,21 +45,23 @@ const LatestGrid = () => {
     if (colourArray.length > 0 && isLoading) setIsLoading(false)
   }, [isLoading, colourArray])
   
-  useEffect(() => {
-    async function getArrayAsync() {
-      if (colourArray.length === 0 || changeArray) {
-        const res = await getArray();
-        setColourArray(res);
-        setChangeArray(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function getArrayAsync() {
+  //     if (colourArray.length === 0 || changeArray) {
+  //       const res = await getArray();
+  //       setColourArray(res);
+  //       setChangeArray(false);
+  //     }
+  //   }
 
-    getArrayAsync();
-  }, [colourArray, changeArray]);
+  //   getArrayAsync();
+  // }, [colourArray, changeArray]);
 
   const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
-    await modifyArray(props);
-    setChangeArray(true);
+    // await modifyArray(props);
+    // setChangeArray(true);
+    setIsLoading(true);
+    hubConnection?.invoke("UpdateColourArray", JSON.stringify(props)).catch(err => console.error(err));
   };
 
   return isLoading ? <CircularProgress /> : <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
