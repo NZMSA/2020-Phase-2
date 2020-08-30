@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using phase_2_back_end.Models;
+using phase_2_back_end.Hubs;
+
 
 namespace phase_2_back_end
 {
@@ -50,6 +52,8 @@ namespace phase_2_back_end
             services.AddDbContext<ApplicationDatabase>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("sqlDatabase"))
             );
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +86,7 @@ namespace phase_2_back_end
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SignalRHub>("/hub");
             });
 
         }
