@@ -34,13 +34,12 @@ namespace phase_2_back_end
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy",
+                options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:3000", "https://signalr-frontend-prototype-msa2020.azurewebsites.net")
+                                      builder.WithOrigins(Configuration["AllowedHosts"])
                                                             .AllowAnyHeader()
-                                                            .AllowAnyMethod()
-                                                            .AllowCredentials();
+                                                            .AllowAnyMethod();
                                   });
             });
             services.AddControllers();
@@ -71,12 +70,7 @@ namespace phase_2_back_end
 
             app.UseRouting();
 
-			app.UseCors(builder => {
-                builder.WithOrigins("https://signalr-frontend-prototype-msa2020.azurewebsites.net")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
-            });
+			app.UseCors(MyAllowSpecificOrigins);
 
 			app.UseAuthorization();
 
