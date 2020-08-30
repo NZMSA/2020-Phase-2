@@ -37,7 +37,7 @@ namespace phase_2_back_end
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins(Configuration["AllowedHosts"])
+                                      builder.WithOrigins(Configuration["AllowedOrigins"].Split(";"))
                                                             .AllowAnyHeader()
                                                             .AllowAnyMethod();
                                   });
@@ -70,7 +70,12 @@ namespace phase_2_back_end
 
             app.UseRouting();
 
-			app.UseCors(MyAllowSpecificOrigins);
+			app.UseCors(builder => {
+                builder.WithOrigins(Configuration["AllowedOrigins"].Split(";"))
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+            });
 
 			app.UseAuthorization();
 
