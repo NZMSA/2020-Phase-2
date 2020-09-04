@@ -8,10 +8,10 @@ interface IGridProps {
   canEdit?: boolean;
 }
 
-const GridComponent = (props: IGridProps) => {
+const Grid = (props: IGridProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedElement, setSelectedElement] = useState({ row: -1, col: -1, colour: "#ffffff" });
-  const singleCellSize = 600 / 32 - 2;
+  const singleCellSize = (600 / 32) - 2;
   const cells = [];
   const addFilter = (e: any) => {
     e.target.style.filter = "brightness(0.8)";
@@ -67,4 +67,4 @@ const GridComponent = (props: IGridProps) => {
   );
 };
 
-export default GridComponent;
+export default Grid;
