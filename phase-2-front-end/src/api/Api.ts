@@ -57,26 +57,11 @@ export interface IColorData {
   canvasID: number;
 }
 
-export interface IUpdatedCell {
-  row: number;
-  col: number;
-  oldHex: string;
-  newHex: string;
-}
-
-export interface ITransformedHistoricalData {
-  [canvasID: number]: { [date: string]: IUpdatedCell[] };
-}
-
 export interface ICanvasData {
   canvasID: number;
   name: string | null;
   score: number;
   colorData: IColorData[];
-}
-
-export interface IHistoricalDataDates {
-  [canvasID: number]: string[];
 }
 
 export const getCanvasById = (id: number): Promise<ICanvasData> => fetch(CANVAS_API_URL + id).then((res) => res.json());
