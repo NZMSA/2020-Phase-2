@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Container } from "@material-ui/core";
-import _ from "lodash";
 
 // core components
 import Grid from "../Grid/Grid";
-import CircularProgress from '../CircularProgress/CircularProgress'
+import CircularProgress from "../CircularProgress/CircularProgress";
+
 // api
-import { ITransformedHistoricalData, getHistoricalData, getCanvasById, IHistoricalDataDates } from "../../api/Api";
+import {  getHistoricalData, getCanvasById } from "../../api/Api";
+
 // utils
-import { transformHistoricalData, historicalDataDates, extractColors } from "../../utils/gridHistory";
+import { transformHistoricalData, historicalDataDates, extractColors, ITransformedHistoricalData, IHistoricalDataDates } from "../../utils/gridHistory";
 
-// NOTE: the current method of processing the data and rendering the
-// component is very inefficient. Explain why that is
-
-// TODO: explain the thought process
 const HistoricalGrid = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [currDateIdx, setCurrDateIdx] = useState<number>();
-  const [selectedCanvasId, setSelectedCanvasId] = useState<number>();
+  const [currDateIdx, setCurrDateIdx] = useState<number>(-1);
+  const [selectedCanvasId, setSelectedCanvasId] = useState<number>(-1);
 
   const [colors, setColors] = useState<string[][]>();
   const [historicalData, setHisotricalData] = useState<ITransformedHistoricalData>();
@@ -39,19 +35,17 @@ const HistoricalGrid = () => {
   };
 
   useEffect(() => {
-    if (isLoading) {
-      onLoadComponent();
-      setIsLoading(false);
-    }
-  }, [isLoading]);
+    onLoadComponent();
+  }, []);
 
   // fetch the latest copy of canvas whenever canvasID is updated
   // and reset the date to the latest one of the modified dates
   useEffect(() => {
     (async () => {
-      if (selectedCanvasId && canvasModifiedDates) {
+      if (selectedCanvasId !== -1 && canvasModifiedDates) {
         const canvas = await getCanvasById(selectedCanvasId);
         const colorsArray = extractColors(canvas);
+
         const latestModifiedDates = canvasModifiedDates[canvas.canvasID];
 
         setCurrDateIdx(latestModifiedDates.length - 1);
@@ -62,75 +56,75 @@ const HistoricalGrid = () => {
 
   // use the current modified date's old hex to update the grid
   const handlePrev = () => {
-    if (canvasModifiedDates && historicalData && colors && currDateIdx !== undefined && selectedCanvasId !== undefined) {
-      const modifiedDates = canvasModifiedDates[selectedCanvasId];
-      const currDate = modifiedDates[currDateIdx];
+    const modifiedDates = canvasModifiedDates![selectedCanvasId];
+    const currDate = modifiedDates[currDateIdx];
 
-      const updatedCells = historicalData[selectedCanvasId][currDate];
-      const colorsDeepCopy = _.cloneDeep(colors);
+    const updatedCells = historicalData![selectedCanvasId][currDate];
 
+    // setColors accepts a callback so we can modify the previous state
+    setColors((prevState) => {
       // change the current cell to the old color
-      for (const { row, col, oldHex } of updatedCells) colorsDeepCopy[row][col] = oldHex;
+      for (const { row, col, oldHex } of updatedCells) prevState![row][col] = oldHex;
 
-      setColors(colorsDeepCopy);
-      setCurrDateIdx(currDateIdx - 1);
-    }
+      return prevState;
+    });
+
+    setCurrDateIdx(currDateIdx - 1);
   };
 
   // use the next modified date's new hex to update the grid
   const handleNext = () => {
-    if (canvasModifiedDates && historicalData && colors && currDateIdx !== undefined && selectedCanvasId !== undefined) {
-      const modifiedDates = canvasModifiedDates[selectedCanvasId];
-      const nextDateIdx = currDateIdx + 1;
-      const nextDate = modifiedDates[nextDateIdx];
+    const modifiedDates = canvasModifiedDates![selectedCanvasId];
+    // slight difference than above, we increment the index before we update the colors
+    // because we want to get the new version of the canvas on the next date
+    const nextDateIdx = currDateIdx + 1;
+    const nextDate = modifiedDates[nextDateIdx];
 
-      const updatedCells = historicalData[selectedCanvasId][nextDate];
+    const updatedCells = historicalData![selectedCanvasId][nextDate];
 
-      const colorsDeepCopy = _.cloneDeep(colors);
+    setColors((prevState) => {
+      // change the cell to the new color
+      for (const { row, col, newHex } of updatedCells) prevState![row][col] = newHex;
 
-      // change the current cell to the new color
-      for (const { row, col, newHex } of updatedCells) colorsDeepCopy[row][col] = newHex;
+      return prevState;
+    });
 
-      setColors(colorsDeepCopy);
-      setCurrDateIdx(nextDateIdx);
-    }
+    setCurrDateIdx(nextDateIdx);
   };
 
   const onClickCanvasId = (newId: number) => setSelectedCanvasId(newId);
 
-  // NOTE: currDateIdx and selectedCanvasId are numbers, so 0 evaluates
-  // to false, therefore need to check them against undefined
-  return !isLoading && historicalData && colors && canvasModifiedDates && selectedCanvasId !== undefined && currDateIdx !== undefined ? (
+  const noPrev = () => currDateIdx === 0;
+  const noNext = () => currDateIdx === canvasModifiedDates![selectedCanvasId].length - 1;
+
+  return historicalData && colors && canvasModifiedDates ? (
     <main style={{ textAlign: "center" }}>
       <header>
-        <Typography variant="h6">List of Canvas IDs:</Typography>
+        <Typography variant='h6'>List of Canvas IDs:</Typography>
         {Object.keys(historicalData).map((canvasId, idx) => (
           <Button key={idx} onClick={() => onClickCanvasId(Number(canvasId))}>
             {canvasId}
           </Button>
         ))}
       </header>
-      <Container maxWidth="md">
+      <Container maxWidth='md'>
         <Grid colourArray={colors} />
       </Container>
       <footer>
         <Typography variant="h6">{canvasModifiedDates[selectedCanvasId][currDateIdx]}</Typography>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          {currDateIdx > 0 && (
-            <Button variant="contained" onClick={() => handlePrev()}>
-              Last Date
-            </Button>
-          )}
-          {currDateIdx < canvasModifiedDates[selectedCanvasId].length - 1 && (
-            <Button variant="contained" color="primary" onClick={() => handleNext()}>
-              Next Date
-            </Button>
-          )}
+          {/* disable the button if it is the first date */}
+          <Button disabled={noPrev()} variant="contained" onClick={() => handlePrev()}>
+            Last Date
+          </Button>
+          {/* disable the button if it is the last date */}
+          <Button disabled={noNext()} variant="contained" color="primary" onClick={() => handleNext()}>
+            Next Date
+          </Button>
         </div>
       </footer>
     </main>
   ) : (
-    // center the progress at the center of the screen
     <CircularProgress />
   );
 };
