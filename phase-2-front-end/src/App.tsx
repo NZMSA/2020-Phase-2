@@ -9,13 +9,14 @@ import "./App.css";
 
 const App = () => {
   return <div>
-    <Header/><BrowserRouter>
-  <Switch>
-    <Route path='/history' component={HistoricalGrid} />
-    <Route path='/' component={LatestGrid} />
-  </Switch>
-  </BrowserRouter>
-    </div>
+    <Header />
+    <BrowserRouter>
+      <Switch>
+        <Route path='/history' component={HistoricalGrid} />
+        <Route path='/' component={LatestGrid} />
+      </Switch>
+    </BrowserRouter>
+  </div>
 };
 
 export default App;
