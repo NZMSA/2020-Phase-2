@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { HubConnectionBuilder, LogLevel, HubConnection } from "@microsoft/signalr";
 import Grid from "../Grid/Grid";
 import CircularProgress from '../CircularProgress/CircularProgress'
+import { connect } from "http2";
 
 const LatestGrid = () => {
   const [colourArray, setColourArray] = useState<string[][]>([]);
@@ -11,10 +12,7 @@ const LatestGrid = () => {
   useEffect(() => {
     const createHubConnection = async () => {
       const connection = new HubConnectionBuilder().withUrl(process.env.REACT_APP_API_BASE_URL! + "/hub").configureLogging(LogLevel.Information).withAutomaticReconnect().build();
-      try{
-        await connection.start();
-        console.log("Successfully connected to signalR hub.");
-        
+      try{        
         connection.on("UpdateColorArray", (colorArray) => {
           setColourArray(colorArray);
           setIsLoading(false);
@@ -29,6 +27,8 @@ const LatestGrid = () => {
           setIsLoading(true);
         })
 
+        await connection.start();
+        console.log("Successfully connected to signalR hub.");
       } catch (error) {
         console.log("Error establishing connection to signalR hub: " + { error });
       }
@@ -36,7 +36,6 @@ const LatestGrid = () => {
     }
     createHubConnection();
   }, []);
-
 
   const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
     hubConnection?.invoke("UpdateColourArray", JSON.stringify(props)).catch(err => console.error(err));
