@@ -57,7 +57,7 @@ namespace phase_2_back_end.Controllers
 		}
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Canvas>> GetCanvasTest(int id)
+        public async Task<ActionResult<Canvas>> GetCanvasById(int id)
         {
             var canvas = await _context.Canvas
                 .Include(c => c.ColorData)
