@@ -39,14 +39,14 @@ namespace phase_2_back_end.Hubs
             await base.OnConnectedAsync();
         }
 
-        public override Task OnDisconnectedAsync(Exception ex)
+        public override async Task OnDisconnectedAsync(Exception ex)
         {
             CurrentSession.ConnectedIds.Remove(Context.ConnectionId);
             if (CurrentSession.ConnectedIds.Count == 0)
             {
-
+                await _canvasController.UpdateCanvas(CurrentSession.ColourArray);
             }
-            return base.OnDisconnectedAsync(ex);
+            await base.OnDisconnectedAsync(ex);
         }
 
         public async Task UpdateColourArray(string cellUpdateJson)

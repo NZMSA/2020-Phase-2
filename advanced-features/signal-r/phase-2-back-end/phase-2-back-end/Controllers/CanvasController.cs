@@ -93,6 +93,27 @@ namespace phase_2_back_end.Controllers
         }
 
         [HttpPut]
+        [Route("UpdateCanvas")]
+        public async Task<IActionResult> UpdateCanvas(string[][] updatedCanvas)
+        {
+            var canvas = _context.Canvas
+                .Include(c => c.ColorData)
+                .OrderByDescending(c => c.CanvasID)
+                .FirstOrDefault();
+
+            canvas.ColorData.ToList().ForEach(cell =>
+            {
+                var updatedCanvasHex = updatedCanvas[cell.RowIndex][cell.ColumnIndex];
+                if (cell.Hex != updatedCanvasHex) {
+                    cell.Hex = updatedCanvasHex;
+                }
+            });
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+        [HttpPut]
         [Route("ClearCanvas")]
         public String ClearCanvas([FromQuery] string psd)
         {
