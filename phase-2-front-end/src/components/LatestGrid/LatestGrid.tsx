@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getArray, modifyArray } from '../../api/Api';
+import { getArray, modifyArray, ModifyProps } from '../../api/Api';
 
 import Grid from "../Grid/Grid";
 import CircularProgress from '../CircularProgress/CircularProgress'
@@ -20,7 +20,7 @@ const LatestGrid = () => {
     setInterval(makeArrayRequest, 10000)
   }, [])
 
-  const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
+  const modifyColour = async (props: ModifyProps) => {
     await modifyArray(props);
     setColourArray(await getArray());
   };

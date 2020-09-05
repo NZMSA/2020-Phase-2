@@ -73,6 +73,7 @@ Every time you save a change to your application it should be automatically rebu
 
 ```
 npm install react-router-dom
+npm install @types/react-router-dom
 ```
 React router dom is the web version of react router.
 
@@ -132,7 +133,7 @@ export const getArray = async () => {
   return response;
 };
 
-interface ModifyProps {
+export interface ModifyProps {
   position: { row: number; col: number };
   colour: string;
 }
@@ -184,6 +185,7 @@ The code for LatestGrid is below
 ```tsx
 import React, { useState, useEffect } from "react";
 import { getArray, modifyArray } from '../../api/Api';
+import { ModifyProps } from "../../api/Api";
 
 import Grid from "../Grid/Grid";
 import CircularProgress from '../CircularProgress/CircularProgress'
@@ -204,7 +206,7 @@ const LatestGrid = () => {
     setInterval(makeArrayRequest, 10000)
   }, [])
 
-  const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
+  const modifyColour = async (props: ModifyProps) => {
     await modifyArray(props);
     setColourArray(await getArray());
   };
@@ -222,6 +224,8 @@ The next useEffect sets up the polling and makes the initial request for our col
 
 Finally we have our modifyColour function which will first make the call to the api and once it has finished reload our colourArray so we can see the relevant change.
 
+
+
 # Creating the Grid Component
 
 Lets create a reusable grid component that will render the grid of colours that will be used to display our game. Start by creating a new folder in the components folder for the Grid and inside of it make a file called `Grid.tsx` 
@@ -229,26 +233,20 @@ Lets create a reusable grid component that will render the grid of colours that 
 
 The inputs we will be needing are the following props colourArray which will provide the grid to render, modifyArray which is a function that allows you to modify the grid this is an optional prop and canEdit to enable the editing of a grid.
 
-```ts
-interface IGridProps {
-  colourArray: string[][];
-  modifyArray?: (props: { position: { row: number; col: number }; colour: string }) => void;
-  canEdit?: boolean;
-}
-```
 To render the grid we are going to make divs with each div being assigned to a specific colour. To do this we first need to calculate the size of each of the divs in our grid. We want each grid to be square with a slight border around it to allow people to distinguish between each of the colours. The calculation of this will be the total width which we will use as 600px divided by the number of divs we want in the row which is 32. Next we need to remove 1 px from each side so we minus 2.
 
 We can put this into code
 
 ```tsx
 import React, { useState } from "react";
-
+import { ModifyProps } from "../../api/Api";
 
 interface IGridProps {
   colourArray: string[][];
-  modifyArray?: (props: { position: { row: number; col: number }; colour: string }) => void;
+  modifyArray?: (props: ModifyProps) => void;
   canEdit?: boolean;
 }
+
 
 const Grid = (props: IGridProps) => {
   const singleCellSize = (600 / 32) - 2;
@@ -290,21 +288,6 @@ Now we want to add the ability to see which element our mouse is over. To do thi
   };
 ```
 
-The div should look like the following.
-
-```tsx
-        <div
-          key={i + "," + j}
-          className="cell"
-          style={{
-            height: singleCellSize,
-            width: singleCellSize,
-            backgroundColor: props.colourArray[i][j],
-          }}
-          onMouseEnter={addFilter}
-          onMouseLeave={removeFilter}
-          />
-```
 Next we will want setup the ability to pick a cell and show a colour picker to allow people to select a new colour for the item on the grid. To do this we are going to need to add a function to handle the onClick. To call our modify array we need to store some information about where it is in the array to do this we can add attributes to the divs and use them when the click occurs. Finally we will store the selected element and pass it into a modal that will be used to show our colour picker. This results in our grid component being updated to the following.
 
 ```tsx
@@ -394,10 +377,11 @@ We will be using material UI paper along with the SketchPicker from react colour
 import React, { useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { Button, Paper } from '@material-ui/core';
+import { ModifyProps } from "../../api/Api";
 
 interface PickerProps {
     selectedElement: { row: number, col: number, colour:string},
-    modifyArray: (props: { position: { row: number, col: number }, colour: string }) => void
+    modifyArray: (props: ModifyProps) => void
     closeModal: () => void
 }
 

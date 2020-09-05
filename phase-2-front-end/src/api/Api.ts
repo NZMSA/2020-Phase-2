@@ -16,7 +16,7 @@ export const getArray = async () => {
   return response;
 };
 
-interface ModifyProps {
+export interface ModifyProps {
   position: { row: number; col: number };
   colour: string;
 }
