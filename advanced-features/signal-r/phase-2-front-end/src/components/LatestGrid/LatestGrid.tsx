@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getArray, modifyArray } from '../../api/Api';
 import { HubConnectionBuilder, LogLevel, HubConnection } from "@microsoft/signalr";
 import Grid from "../Grid/Grid";
 import CircularProgress from '../CircularProgress/CircularProgress'
@@ -18,6 +17,7 @@ const LatestGrid = () => {
         
         connection.on("UpdateColorArray", (colorArray) => {
           setColourArray(colorArray);
+          console.log("Canvas updated");
         });
 
         connection.on("NewUserConnection", (clientIp: string) => {
