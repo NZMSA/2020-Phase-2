@@ -70,12 +70,6 @@ namespace phase_2_back_end.Controllers
             return canvas;
         }
 
-        // to check if the Canvas exist
-        private bool CanvasExists(int id)
-        {
-            return _context.Canvas.Any(e => e.CanvasID == id);
-        }
-
         [HttpPut]
         [Route("UpdateCell")]
         public async Task<IActionResult> UpdateCell([FromBody] UpdateCellModel data)
