@@ -6,6 +6,7 @@
     padding: 0px;
     font-size: 0px;
     background-color: black;
+    box-sizing: content-box;
 }
 
 .cell {
@@ -26,4 +27,33 @@
 
 h1{
     margin: 0 0;
+}
+
+.footer{
+    padding: 50px;
+    text-align: center;
+}
+
+#id{
+    margin: 0 25%;
+}
+
+@media (min-width: 768px){
+    #info{
+        margin: 0 12.5%;
+    }
+    .col-md-6{
+        max-width: none !important;
+    }
+}
+
+@media (max-width: 768px){
+    #info{
+        margin: 0 12.5%;
+    }
+
+}
+
+span{
+    margin-bottom: 20px;
 }

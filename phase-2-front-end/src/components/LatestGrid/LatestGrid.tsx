@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { getArray, modifyArray } from '../../api/Api';
 
 import Grid from "../Grid/Grid";
-import CircularProgress from '../CircularProgress/CircularProgress'
+import CircularProgress from '../CircularProgress/CircularProgress';
+import Info from '../Text/Information';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const LatestGrid = () => {
   const [colourArray, setColourArray] = useState<string[][]>([]);
@@ -30,7 +34,25 @@ const LatestGrid = () => {
     setChangeArray(true);
   };
 
-  return isLoading ? <CircularProgress /> : <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+  if(isLoading){
+    return <CircularProgress/>
+  }
+  else{
+    return (
+      <div>
+        <Container fluid>
+        <Row style={{justifyContent:"center"}}>
+          <Col md={6}>
+            <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+          </Col>
+          <Col md={6} style={{textAlign:"center", minWidth:"600px"}}>
+            <Info/>
+          </Col>
+        </Row>
+        </Container>
+      </div>
+    )
+  }
 };
 
 export default LatestGrid;
