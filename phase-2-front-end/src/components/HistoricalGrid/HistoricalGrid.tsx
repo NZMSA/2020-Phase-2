@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Container } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 // core components
@@ -114,11 +114,11 @@ const HistoricalGrid = () => {
           </Button>
         ))}
       </header>
-      <Container maxWidth="md">
-        <Grid colourArray={colors} />
-      </Container>
+      <Grid colourArray={colors} />
       <footer>
-        <Typography style={{ margin: "10px 0" }} variant="h6">{canvasModifiedDates[selectedCanvasId][currDateIdx]}</Typography>
+        <Typography style={{ margin: "10px 0" }} variant="h6">
+          {canvasModifiedDates[selectedCanvasId][currDateIdx]}
+        </Typography>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {/* disable the button if it is the first date */}
           <Button disabled={noPrev()} variant="contained" onClick={() => handlePrev()}>
