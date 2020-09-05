@@ -34,25 +34,25 @@ const LatestGrid = () => {
 
   if (colourArray.length === 0) {
     return <CircularProgress />;
-  } else {
-    return (
-      <div>
-        <Container fluid>
-          <Row style={{ justifyContent: "center" }}>
-            <Col md={6}>
-              <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
-              <div style={{ textAlign: "center", margin: "5% 0" }}>
-                <Link to="/history">View Canvas Hisotry</Link>
-              </div>
-            </Col>
-            <Col md={6} style={{ textAlign: "center", minWidth: "600px" }}>
-              <Information />
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
   }
+
+  return (
+    <div>
+      <Container fluid>
+        <Row style={{ justifyContent: "center" }}>
+          <Col md={6}>
+            <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+            <div style={{ textAlign: "center", margin: "5% 0" }}>
+              <Link to="/history">View Canvas Hisotry</Link>
+            </div>
+          </Col>
+          <Col md={6} style={{ textAlign: "center", minWidth: "600px" }}>
+            <Information />
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 };
 
 export default LatestGrid;
