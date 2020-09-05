@@ -42,7 +42,7 @@ const LatestGrid = () => {
             <Col md={6}>
               <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
               <div style={{ textAlign: "center", margin: "5% 0" }}>
-                <Link to="/history">View Canvas Hisotry</Link>
+                <Link to="/history">View Canvas History</Link>
               </div>
             </Col>
             <Col md={6} style={{ textAlign: "center", minWidth: "600px" }}>
