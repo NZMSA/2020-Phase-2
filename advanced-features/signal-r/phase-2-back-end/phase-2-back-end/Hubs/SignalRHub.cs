@@ -2,27 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using phase_2_back_end.Controllers;
+using phase_2_back_end.Models;
 
 namespace phase_2_back_end.Hubs
 {
     public class SignalRHub : Hub
     {
-        public static class CurrentSession
+        private CanvasController _canvasController;
+
+        public SignalRHub(ApplicationDatabase context, IConfiguration config)
         {
-            public static string[][] ColourArray;
+            _canvasController = new CanvasController(context, config);
         }
 
         public override async Task OnConnectedAsync()
         {
             string clientIp = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
             await Clients.Others.SendAsync("NewUserConnection", clientIp);
+            CurrentSession.ConnectedIds.Add(Context.ConnectionId);
 
             if (CurrentSession.ColourArray == null)
             {
-                await Clients.Caller.SendAsync("InitializeColorArray");
-            } else
+                CurrentSession.ColourArray = JsonConvert.DeserializeObject<string[][]>(_canvasController.GetCanvas());
+                await Clients.Caller.SendAsync("UpdateColorArray", CurrentSession.ColourArray);
+            }
+            else
             {
                 await Clients.Caller.SendAsync("UpdateColorArray", CurrentSession.ColourArray);
             }
@@ -30,9 +39,14 @@ namespace phase_2_back_end.Hubs
             await base.OnConnectedAsync();
         }
 
-        public void SetColourArray(string[][] colourArray)
+        public override Task OnDisconnectedAsync(Exception ex)
         {
-            CurrentSession.ColourArray = colourArray;
+            CurrentSession.ConnectedIds.Remove(Context.ConnectionId);
+            if (CurrentSession.ConnectedIds.Count == 0)
+            {
+
+            }
+            return base.OnDisconnectedAsync(ex);
         }
 
         public async Task UpdateColourArray(string cellUpdateJson)
@@ -42,6 +56,11 @@ namespace phase_2_back_end.Hubs
             await Clients.All.SendAsync("UpdateColorArray", CurrentSession.ColourArray);
         }
 
+    }
+    public static class CurrentSession
+    {
+        public static string[][] ColourArray;
+        public static HashSet<string> ConnectedIds = new HashSet<string>();
     }
 
     public class CellUpdate
