@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Container } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // core components
 import Grid from "../Grid/Grid";
@@ -122,6 +123,7 @@ const HistoricalGrid = () => {
             Next Date
           </Button>
         </div>
+        <Link to="/">Return to home</Link>
       </footer>
     </main>
   ) : (
