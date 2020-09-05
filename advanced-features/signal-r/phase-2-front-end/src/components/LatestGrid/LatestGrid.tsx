@@ -6,7 +6,6 @@ import CircularProgress from '../CircularProgress/CircularProgress'
 
 const LatestGrid = () => {
   const [colourArray, setColourArray] = useState<string[][]>([]);
-  const [changeArray, setChangeArray] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true)
   const [hubConnection, setHubConnection] = useState<HubConnection>();
 
@@ -46,20 +45,16 @@ const LatestGrid = () => {
   }, [isLoading, colourArray])
   
   // useEffect(() => {
-  //   async function getArrayAsync() {
-  //     if (colourArray.length === 0 || changeArray) {
-  //       const res = await getArray();
-  //       setColourArray(res);
-  //       setChangeArray(false);
-  //     }
+  //   const makeArrayRequest = async () => {
+  //     setColourArray(await getArray());
   //   }
-
-  //   getArrayAsync();
-  // }, [colourArray, changeArray]);
+  //   makeArrayRequest();
+  //   setInterval(makeArrayRequest, 10000)
+  // }, [])
 
   const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
     // await modifyArray(props);
-    // setChangeArray(true);
+    // setColourArray(await getArray());
     hubConnection?.invoke("UpdateColourArray", JSON.stringify(props)).catch(err => console.error(err));
   };
 
