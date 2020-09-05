@@ -15,7 +15,6 @@ const LatestGrid = () => {
       try{        
         connection.on("UpdateColorArray", (colorArray) => {
           setColourArray(colorArray);
-          setIsLoading(false);
         });
 
         connection.on("NewUserConnection", (clientIp: string) => {
@@ -23,12 +22,13 @@ const LatestGrid = () => {
         });
 
         connection.onreconnecting(() => {
-          console.log('Reconnecting...')
           setIsLoading(true);
+          console.log('Reconnecting...')
         })
 
         await connection.start();
         console.log("Successfully connected to signalR hub.");
+
       } catch (error) {
         console.log("Error establishing connection to signalR hub: " + { error });
       }
@@ -36,6 +36,10 @@ const LatestGrid = () => {
     }
     createHubConnection();
   }, []);
+
+  useEffect(() => {
+    if (colourArray.length > 0 && isLoading) setIsLoading(false)
+  }, [isLoading, colourArray])
 
   const modifyColour = async (props: { position: { row: number; col: number }; colour: string }) => {
     hubConnection?.invoke("UpdateColourArray", JSON.stringify(props)).catch(err => console.error(err));
