@@ -3,15 +3,27 @@ import moment from 'moment';
 
 import {
   IHistoricalData,
-  ITransformedHistoricalData,
-  IUpdatedCell,
   getColorDataById,
   ICanvasData,
-  IHistoricalDataDates,
   IColorData,
 } from '../api/Api';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
+
+export interface IUpdatedCell {
+  row: number;
+  col: number;
+  oldHex: string;
+  newHex: string;
+}
+
+export interface ITransformedHistoricalData {
+  [canvasID: number]: { [date: string]: IUpdatedCell[] };
+}
+
+export interface IHistoricalDataDates {
+  [canvasID: number]: string[];
+}
 
 // resolve all promises inside the array
 const getAllColorData = async (histDataArray: IHistoricalData[]): Promise<IColorData[]> => {
@@ -40,9 +52,9 @@ const deserialzeHistoricalData = (hist: IHistoricalData) => {
 export const transformHistoricalData = async (historicalDataArray: IHistoricalData[]): Promise<ITransformedHistoricalData> => {
   const result: ITransformedHistoricalData = {};
 
-  // allColorData will have the same length as historicalDataArray
   const allColorData = await getAllColorData(historicalDataArray);
 
+  // allColorData will have the same length as historicalDataArray
   for (let idx = 0; idx < allColorData.length && idx < historicalDataArray.length; idx++) {
     const { rowIndex, columnIndex, canvasID } = allColorData[idx];
 
