@@ -443,7 +443,7 @@ For every canvas (i.e. a canvas with an unique id), we can see different states 
 
 (Note: there is no much frontend styling involved with this component, as we are using the existing `Grid` component. Rather, it focuses more on logic and data manipulation)
 
-<div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/TgxwdeqVb6CLEx5KzC" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+![image](https://media.giphy.com/media/TgxwdeqVb6CLEx5KzC/giphy.gif)
 
 
 Main things to consider when creating the component:
