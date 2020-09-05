@@ -13,23 +13,18 @@ import { getArray, modifyArray, ModifyProps } from "../../api/Api";
 
 const LatestGrid = () => {
   const [colourArray, setColourArray] = useState<string[][]>([]);
-  const [changeArray, setChangeArray] = useState<boolean>(false);
 
   useEffect(() => {
-    async function getArrayAsync() {
-      if (colourArray.length === 0 || changeArray) {
-        const res = await getArray();
-        setColourArray(res);
-        setChangeArray(false);
-      }
+    const makeArrayRequest = async () => {
+      setColourArray(await getArray());
     }
-
-    getArrayAsync();
-  }, [colourArray, changeArray]);
+    makeArrayRequest();
+    setInterval(makeArrayRequest, 10000)
+  }, []) 
 
   const modifyColour = async (props: ModifyProps) => {
     await modifyArray(props);
-    setChangeArray(true);
+    setColourArray(await getArray());
   };
 
   if (colourArray.length === 0) {
