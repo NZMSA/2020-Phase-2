@@ -418,3 +418,64 @@ export default (props: PickerProps) => {
 }
 ```
 This will complete the basic game.
+
+## Historical Grid
+
+### What is it
+
+For every canvas (i.e. a canvas with an unique id), we can see different states of it on different dates. 
+
+(Note: there is no much frontend styling involved with this component, as we are using the existing `Grid` component. Rather, it focuses more on logic and data manipulation)
+
+![image](https://media.giphy.com/media/TgxwdeqVb6CLEx5KzC/giphy.gif)
+
+
+Main things to consider when creating the component:
+
+- What is the available data we can get from the **backend API**?
+- What are the **states** we need for the component?
+- How do we manipulate and **structure** the data?
+
+### API
+
+We can fetch the data with the following types `ICanvasData`, `IColorData`, `IHistoricalData`, and they are defined in `Api.ts`.
+
+(Note: find more information about why it is structured that way in the backend API documentation)
+
+### States
+
+We have defined the following states in `HistoricalGrid.tsx`: 
+
+- `currDateIdx`: the index of the selected modified date, of the current canvas.
+
+- `selectedCanvasId`: the id of the current selected canvas.
+
+- `colors`: the color array of the grid which we use to paint.
+
+- `historicalData`: has type `ITransformedHistoricalData` defined in `gridHistory.ts`.
+
+- `canvasModifiedDates`: has type `IHistoricalDataDates` defined in `gridHistory.ts`.
+
+Let's discuss why we want to use these states. We need to understand the actions we will perform on the components.
+
+1. For each canvas with an unique ID, we want to see the state the grid was at on the previous date after clicking the `LAST DATE` button. Similarly, we want to color of the grid on the next date if there exists a next date after clicking the `NEXT DATE` button. This tells us we want to store an array of the modified dates of each unique canvas. Hence `canvasModifiedDates`. We need `currDateIdx` to help us keep track of which date of the current selected canvas we are in.
+
+2. When we select a different canvas ID, if any, the grid will render the colors of the latest modified date of that canvas. Hence `selectedCanvasId`.
+
+3. Finally and most importantly, we want to know what colors the cells were updated from and to in each modified date of the canvas. This tells us we need to access such information based on the canvas ID and modified date. Hence we use `historicalData` with the type `ITransformedHistoricalData`.
+
+### Data Manipulation
+
+To process the data, we have defined 5 functions in `gridHistory.ts`:
+
+- `getAllColorData`: use `Promise.all` to get an array of resolved outputs. It is faster than doing an individual API call to get the color data during each iteration of the for loop.
+
+- `deserialzeHistoricalData`: first it parses the respective values from `string` to `JSON`, then extract and output the relevant keys.
+
+- `transformHistoricalData`: returns a promise with a type of `ITransformedHistoricalData`. The motivation of the structure of this type is discussed in the `States` section above.
+
+- `historicalDataDates`: returns a value with type `IHistoricalDataDates`.
+
+- `extractColors`: returns a 2D array with the Hex color in each cell. During each iteration of the nested loop, `gridSize * r + c` gives us the respective position in the 1D array `sortedColorData`. (Note: playnig with an example is probably the best way to understand why)
+
+Hope the above helps you to understand the `HistoricalGrid` component! If in doubt, feel free to reach out to 0alexzhong0@gmail.com. Always keen to help and explain, xD.

@@ -1,31 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { getArray, modifyArray, ModifyProps } from '../../api/Api';
+import { Link } from "react-router-dom";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 
 import Grid from "../Grid/Grid";
-import CircularProgress from '../CircularProgress/CircularProgress'
+import Information from "../Text/Information";
+import CircularProgress from "../CircularProgress/CircularProgress";
+
+import { getArray, modifyArray, ModifyProps } from "../../api/Api";
 
 const LatestGrid = () => {
   const [colourArray, setColourArray] = useState<string[][]>([]);
-  const [isLoading, setIsLoading] = useState(true)
+  const [changeArray, setChangeArray] = useState<boolean>(false);
 
   useEffect(() => {
-    if (colourArray.length > 0 && isLoading) setIsLoading(false)
-  }, [isLoading, colourArray])
-
-  useEffect(() => {
-    const makeArrayRequest = async () => {
-      setColourArray(await getArray());
+    async function getArrayAsync() {
+      if (colourArray.length === 0 || changeArray) {
+        const res = await getArray();
+        setColourArray(res);
+        setChangeArray(false);
+      }
     }
-    makeArrayRequest();
-    setInterval(makeArrayRequest, 10000)
-  }, [])
+
+    getArrayAsync();
+  }, [colourArray, changeArray]);
 
   const modifyColour = async (props: ModifyProps) => {
     await modifyArray(props);
-    setColourArray(await getArray());
+    setChangeArray(true);
   };
 
-  return isLoading ? <CircularProgress /> : <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+  if (colourArray.length === 0) {
+    return <CircularProgress />;
+  }
+
+  return (
+    <div>
+      <Container fluid>
+        <Row style={{ justifyContent: "center" }}>
+          <Col md={6}>
+            <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+            <div style={{ textAlign: "center", margin: "5% 0" }}>
+              <Link to="/history">View Canvas Hisotry</Link>
+            </div>
+          </Col>
+          <Col md={6} style={{ textAlign: "center", minWidth: "600px" }}>
+            <Information />
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 };
 
 export default LatestGrid;
