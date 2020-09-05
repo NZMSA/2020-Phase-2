@@ -34,11 +34,11 @@ h1{
     text-align: center;
 }
 
+#info{
+    margin: 0 12.5%;
+}
 
 @media (min-width: 768px){
-    #info{
-        margin: 0 12.5%;
-    }
     .col-md-6{
         max-width: none !important;
     }
