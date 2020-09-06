@@ -11,8 +11,12 @@ const LatestGrid = () => {
 
   useEffect(() => {
     const createHubConnection = async () => {
-      const connection = new HubConnectionBuilder().withUrl(process.env.REACT_APP_API_BASE_URL! + "/hub").configureLogging(LogLevel.Information).withAutomaticReconnect().build();
-      try{        
+      const connection = new HubConnectionBuilder()
+        .withUrl(process.env.REACT_APP_API_BASE_URL! + "/hub")
+        .configureLogging(LogLevel.Information)
+        .withAutomaticReconnect()
+        .build();
+      try {
         connection.on("UpdateColorArray", (colorArray) => {
           setColourArray(colorArray);
         });
@@ -23,17 +27,18 @@ const LatestGrid = () => {
 
         connection.onreconnecting(() => {
           setIsLoading(true);
-          console.log('Reconnecting...')
-        })
+          console.log("Reconnecting...");
+        });
 
         await connection.start();
         console.log("Successfully connected to signalR hub.");
-
       } catch (error) {
-        console.log("Error establishing connection to signalR hub: " + { error });
+        console.log(
+          "Error establishing connection to signalR hub: " + { error }
+        );
       }
       setHubConnection(connection);
-    }
+    };
     createHubConnection();
   }, []);
 
