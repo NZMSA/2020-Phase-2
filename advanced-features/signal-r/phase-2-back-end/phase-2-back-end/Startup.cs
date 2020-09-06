@@ -83,7 +83,7 @@ namespace phase_2_back_end
             app.UseRouting();
 
             app.UseCors(builder => {
-                builder.WithOrigins("http://localhost:3000")
+                builder.WithOrigins(Configuration["AllowedOrigins"].Split(";"))
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
