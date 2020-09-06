@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  process.env.NODE_ENV === "development" ? "https://localhost:44301/api/" : "https://msa-2020-api.azurewebsites.net/api/";
+const API_BASE_URL = "https://msa-2020-api.azurewebsites.net/api/"
 
 const CANVAS_API_URL = API_BASE_URL + "Canvas/";
 const HISTORICAL_DATA_URL = API_BASE_URL + "HistoricalDatas/";
@@ -16,7 +15,7 @@ export const getArray = async () => {
   return response;
 };
 
-interface ModifyProps {
+export interface ModifyProps {
   position: { row: number; col: number };
   colour: string;
 }
@@ -32,10 +31,6 @@ export const modifyArray = async ({ position: { row, col }, colour }: ModifyProp
     method: "PUT",
   });
 };
-
-// TODO: can potentially put these in a model folder
-// NOTE: nitpick on the model field naming, should change
-// oldValues, newValues and keyValues to singular instead
 
 // same types as defined in backend/Models/HistoricalData.cs
 export interface IHistoricalData {
@@ -62,28 +57,11 @@ export interface IColorData {
   canvasID: number;
 }
 
-export interface IUpdatedCell {
-  row: number;
-  col: number;
-  oldHex: string;
-  newHex: string;
-}
-
-// TODO: explain why I want to structure the data like this
-export interface ITransformedHistoricalData {
-  [canvasID: number]: { [date: string]: IUpdatedCell[] };
-}
-
 export interface ICanvasData {
   canvasID: number;
   name: string | null;
   score: number;
   colorData: IColorData[];
-}
-
-// TODO: explain why this is necessary
-export interface IHistoricalDataDates {
-  [canvasID: number]: string[];
 }
 
 export const getCanvasById = (id: number): Promise<ICanvasData> => fetch(CANVAS_API_URL + id).then((res) => res.json());

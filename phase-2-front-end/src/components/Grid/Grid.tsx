@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Modal } from "@material-ui/core";
 import ColorPicker from "../ColorPicker/ColorPicker";
+import { ModifyProps } from "../../api/Api";
 
 interface IGridProps {
   colourArray: string[][];
-  modifyArray?: (props: { position: { row: number; col: number }; colour: string }) => void;
+  modifyArray?: (props: ModifyProps) => void;
   canEdit?: boolean;
 }
 
