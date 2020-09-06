@@ -551,7 +551,7 @@ public async Task<IActionResult> UpdateCanvas(string[][] updatedCanvas)
     var canvas = _context.Canvas
         .Include(c => c.ColorData)
         .OrderByDescending(c => c.CanvasID)
-        .FirstOrDefault()
+        .FirstOrDefault();
 
     canvas.ColorData.ToList().ForEach(cell =>
     {
