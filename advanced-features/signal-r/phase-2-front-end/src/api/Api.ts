@@ -64,8 +64,8 @@ export interface ICanvasData {
   colorData: IColorData[];
 }
 
-export const getCanvasById = (id: number): Promise<ICanvasData> => fetch(CANVAS_API_URL + id).then((res) => res.json());
+export const getCanvasById = (id: number): Promise<ICanvasData> => fetch(process.env.REACT_APP_API_BASE_URL! + "/Canvas/" + id).then((res) => res.json());
 
-export const getColorDataById = (id: number): Promise<IColorData> => fetch(COLOR_DATA_URL + id).then((res) => res.json());
+export const getColorDataById = (id: number): Promise<IColorData> => fetch(process.env.REACT_APP_API_BASE_URL! + "/ColorDatas/" + id).then((res) => res.json());
 
-export const getHistoricalData = (): Promise<IHistoricalData[]> => fetch(HISTORICAL_DATA_URL).then((res) => res.json());
+export const getHistoricalData = (): Promise<IHistoricalData[]> => fetch(process.env.REACT_APP_API_BASE_URL! + "/HistoricalDatas/").then((res) => res.json());
