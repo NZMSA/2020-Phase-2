@@ -79,7 +79,9 @@ A concise single-page guide on the basics behind Scrum and Agile.
 The Scrum Primer is a short document on Scrum. It's 20 pages long. It goes into detail on a lot of the concepts surrounding Scrum. It's a bit of a read, but for those that like to cover official publications this may be the resource for you. The website also provides a decent overview image that you can use as a reference.
 
 ## Assessment
-For the assessment, you will be asked a few questions about the topics covered in this module during your presentation.
+For the assessment, you will be asked a few questions about the topics covered in this module during your presentation. The questions won't be super difficult but you will need to demonstrate your basic understands of Agile software development.
+
+Example Question: What is a stand-up meeting? How is it different from an extensive meeting?
 
 ## Need help?
 Post your questions on our [Facebook group](https://aka.ms/nzmsa) or come join us on our [discord server](https://discord.gg/c4Y5SAZ).

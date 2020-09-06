@@ -344,4 +344,3 @@ When ever the screen size is detected to be less than 768px wide we remove the `
 }
 ``` 
 Margin is added to the information div so the information is lifted off the right and is centered along with the column we created.
-
