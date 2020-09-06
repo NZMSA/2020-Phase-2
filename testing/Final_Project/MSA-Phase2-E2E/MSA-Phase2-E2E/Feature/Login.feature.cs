@@ -110,7 +110,7 @@ this.ScenarioInitialize(scenarioInfo);
                             "Password"});
                 table1.AddRow(new string[] {
                             "raymond-msanz-test",
-                            "lD0*9h@S#%Feb8X0Ify&%NH^6^7$sy"});
+                            "redacted"});
 #line 6
  testRunner.And("I enter the my username and password", ((string)(null)), table1, "And ");
 #line hidden
