@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography, Container } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 // core components
@@ -7,10 +7,16 @@ import Grid from "../Grid/Grid";
 import CircularProgress from "../CircularProgress/CircularProgress";
 
 // api
-import {  getHistoricalData, getCanvasById } from "../../api/Api";
+import { getHistoricalData, getCanvasById } from "../../api/Api";
 
 // utils
-import { transformHistoricalData, historicalDataDates, extractColors, ITransformedHistoricalData, IHistoricalDataDates } from "../../utils/gridHistory";
+import {
+  transformHistoricalData,
+  historicalDataDates,
+  extractColors,
+  ITransformedHistoricalData,
+  IHistoricalDataDates,
+} from "../../utils/gridHistory";
 
 const HistoricalGrid = () => {
   const [currDateIdx, setCurrDateIdx] = useState<number>(-1);
@@ -101,22 +107,25 @@ const HistoricalGrid = () => {
   return historicalData && colors && canvasModifiedDates ? (
     <main style={{ textAlign: "center" }}>
       <header>
-        <Typography variant='h6'>List of Canvas IDs:</Typography>
+        <Typography variant="h6">List of Canvas IDs:</Typography>
         {Object.keys(historicalData).map((canvasId, idx) => (
           <Button key={idx} onClick={() => onClickCanvasId(Number(canvasId))}>
             {canvasId}
           </Button>
         ))}
       </header>
-      <Container maxWidth='md'>
-        <Grid colourArray={colors} />
-      </Container>
+      <Grid colourArray={colors} />
       <footer>
-        <Typography variant="h6">{canvasModifiedDates[selectedCanvasId][currDateIdx]}</Typography>
+        <Typography style={{ margin: "10px 0" }} variant="h6">
+          {canvasModifiedDates[selectedCanvasId][currDateIdx]}
+        </Typography>
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {/* disable the button if it is the first date */}
           <Button disabled={noPrev()} variant="contained" onClick={() => handlePrev()}>
             Last Date
+          </Button>
+          <Button variant="contained">
+            <Link to="/">Home</Link>
           </Button>
           {/* disable the button if it is the last date */}
           <Button disabled={noNext()} variant="contained" color="primary" onClick={() => handleNext()}>
