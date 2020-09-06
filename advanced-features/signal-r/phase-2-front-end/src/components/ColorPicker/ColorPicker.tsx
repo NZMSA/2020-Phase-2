@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { SketchPicker } from 'react-color';
 import { Button, Paper } from '@material-ui/core';
+import { ModifyProps } from '../../api/Api';
 
 interface PickerProps {
     selectedElement: { row: number, col: number, colour:string},
-    modifyArray: (props: { position: { row: number, col: number }, colour: string }) => void
+    modifyArray: (props: ModifyProps) => void
     closeModal: () => void
 }
 

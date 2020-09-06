@@ -57,7 +57,7 @@ namespace phase_2_back_end.Controllers
 		}
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Canvas>> GetCanvasTest(int id)
+        public async Task<ActionResult<Canvas>> GetCanvasById(int id)
         {
             var canvas = await _context.Canvas
                 .Include(c => c.ColorData)
@@ -104,14 +104,14 @@ namespace phase_2_back_end.Controllers
             canvas.ColorData.ToList().ForEach(cell =>
             {
                 var updatedCanvasHex = updatedCanvas[cell.RowIndex][cell.ColumnIndex];
-                if (cell.Hex != updatedCanvasHex) {
+                if (cell.Hex != updatedCanvasHex)
+                {
                     cell.Hex = updatedCanvasHex;
                 }
             });
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
 
         [HttpPut]
         [Route("ClearCanvas")]

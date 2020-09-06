@@ -1,30 +1,48 @@
 import _ from "lodash";
 import moment from "moment";
 
-import { IHistoricalData, ITransformedHistoricalData, IUpdatedCell, getColorDataById, ICanvasData, IHistoricalDataDates } from "../api/Api";
+import { IHistoricalData, getColorDataById, ICanvasData, IColorData } from "../api/Api";
 
 const DATE_FORMAT = "YYYY-MM-DD";
+
+export interface IUpdatedCell {
+  row: number;
+  col: number;
+  oldHex: string;
+  newHex: string;
+}
+
+export interface ITransformedHistoricalData {
+  [canvasID: number]: { [date: string]: IUpdatedCell[] };
+}
+
+export interface IHistoricalDataDates {
+  [canvasID: number]: string[];
+}
+
+const getAllColorData = (historicalDataArray: IHistoricalData[]) =>
+  Promise.all(historicalDataArray.map(async (data) => getColorDataById(deserialzeHistoricalData(data).colorDataId)));
+
+const deserialzeHistoricalData = (hist: IHistoricalData) => {
+  const { oldValues, newValues, keyValues, dateTime } = hist;
+
+  const oldHex = JSON.parse(oldValues).Hex;
+  const newHex = JSON.parse(newValues).Hex;
+  const colorDataId = JSON.parse(keyValues).ColorDataID;
+
+  return { oldHex, newHex, colorDataId, dateTime };
+};
 
 // all the dates value in the array are sorted from earliest to the latest already
 export const transformHistoricalData = async (historicalDataArray: IHistoricalData[]): Promise<ITransformedHistoricalData> => {
   const result: ITransformedHistoricalData = {};
 
-  for (const histData of historicalDataArray) {
-    /**
-     * NOTE:
-     * - histData.keyValues may not be a valid value to transform to a number from
-     * - the tableName may not necessarily be ColorData all the time
-     */
-    const { dateTime, keyValues, oldValues, newValues } = histData;
+  const allColorData: IColorData[] = await getAllColorData(historicalDataArray);
 
-    // deserialization
-    const oldHex = JSON.parse(oldValues).Hex;
-    const newHex = JSON.parse(newValues).Hex;
-    const deserializedKey = JSON.parse(keyValues).ColorDataID;
-
-    const colorDataId = Number(deserializedKey);
-    const colorData = await getColorDataById(colorDataId);
-    const { rowIndex, columnIndex, canvasID } = colorData;
+  // allColorData and historicalDataArray have the same length
+  for (let idx = 0; idx < allColorData.length; idx++) {
+    const { oldHex, newHex, dateTime } = deserialzeHistoricalData(historicalDataArray[idx]);
+    const { rowIndex, columnIndex, canvasID } = allColorData[idx];
 
     // transform from 2020-08-25T12:08:51.026Z to 2020-08-25
     const localDateValue = moment.utc(dateTime).local().format(DATE_FORMAT);
