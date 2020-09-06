@@ -217,7 +217,7 @@ First, we need to install the following NuGet packages:
 
 - Hangfire.AspNetCore ( this will run our periodic job)
 - Hangfire.MemoryStorage ( this is required to store data about our periodic job )
-- Hangfore.Hangfire.Core ( please install this package as well I forgot to mention this in the video tutorial 😔)
+- Hangfire.Core ( please install this package as well I forgot to mention this in the video tutorial 😔)
 
 
 We'll then create a folder called `PeriodicJobs` in our solution and a `PeriodicCanvasJobs.cs` file under `PeriodicJobs` folder.
