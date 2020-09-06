@@ -216,3 +216,132 @@ To process the data, we have defined 5 functions in `gridHistory.ts`:
 - `extractColors`: returns a 2D array with the Hex color in each cell. During each iteration of the nested loop, `gridSize * r + c` gives us the respective position in the 1D array `sortedColorData`. (Note: playnig with an example is probably the best way to understand why)
 
 Hope the above helps you to understand the `HistoricalGrid` component! If in doubt, feel free to reach out to 0alexzhong0@gmail.com. Always keen to help and explain, xD.
+
+# Styling
+## HeaderComponent
+We are now going to style our web page. In web app development it is important to have responsive styling so that the application can be viewed on all screen sizes to maintain a high degree of usability.
+
+First we will add a header header component to this baron grid.
+```javascript
+render(){
+        return(
+            <div className="header">
+            <h1>
+                <span id="P-char" style={{color: this.updateColours()}}>P</span>
+                <span id="I-char" style={{color: this.updateColours()}}>i</span>
+                <span id="X-char" style={{color: this.updateColours()}}>x</span>
+                <span id="E-char" style={{color: this.updateColours()}}>e</span>
+                <span id="L-char" style={{color: this.updateColours()}}>l</span>
+                <span id="S-char" style={{color: this.updateColours()}}>s</span>
+                <img src={logo} style={{display:"inline", height:"35px", verticalAlign:"middle", margin:"20px"}}/>
+            </h1>
+        </div>
+        )
+    }
+```
+We will animate each letter to randomly change into any one of the colours in the rainbow (ROYGBIV).
+Each character will derive its colour from the updateColours() function, which generates a random integer to index into the colours array.
+`<span id="P-char" style={{color: this.updateColours()}}>P</span>`
+Display inline will cause the purplePixel gif to be displayed on the same same line as all the spans in our `h1` tag.
+The vertical align will also place the gif in the middle of the header component in terms of height. Margin is added to to the `img` to create distance between the title and the image itself.
+`<img src={logo} style={{display:"inline", height:"35px", verticalAlign:"middle", margin:"20px"}}/>`
+
+Once the header component is rendered (does a mount) it will the `refresh()` to be called every 3000 milliseconds.
+```javascript
+ componentDidMount() {
+    setInterval(this.refresh.bind(this), 3000);
+  }
+  
+  refresh() {
+    this.setState({ refresh: 1 });
+  }
+  
+    updateColours() {
+        let colours = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo'];
+        return colours[(Math.random() * colours.length) >> 0];
+    }
+```
+This assigns the integer 1 to the refresh state using setState(), which causes the component to be remounted. Thus calling `refresh()` 3000 milliseconds later. Every time the component is rendered, each letter will calculate it colour by calling the `updateColours` function.
+```CSS
+.header{
+    text-align: center;
+    background: #F8F8F8;
+    margin-bottom: 20px;
+    padding: 15px;
+    min-width: 600px;
+}
+```
+
+We added an off gray to make the header visible compared to the main body content. Padding and margins are added to seperate the header from the body and add thickness to the header. A `min-width` of 600px is added so that the header will always be as wide as the header.
+
+
+## FooterComponent
+We will make a simple footer component to indicate ownership.
+```javascript
+const Footer = () => <div className="footer">&copy; All rights reserved MSA 2020.</div>;
+```
+```CSS
+.footer{
+    padding: 50px;
+    text-align: center;
+}
+```
+Padding is added to seperate the the footer from the main body components and the text is aligned in the center of the element.
+
+## Responsive Information
+The ReactPlayer component is used to embed a YouTube video on to the information column. The library is downloaded using `npm install react-player`. We want the video to be as wide as the column itself.
+```javascript
+  <div id="info">
+    <p>
+      Pixels is inspired by the <a href="https://www.reddit.com/r/place/">/r/place</a> subreddit. To get started select a pixel on the canvas and select a colour and press confirm. Now your edit is visible to everyone!
+    </p>
+    <ReactPlayer url="https://www.youtube.com/watch?v=XnRCZK3KjUY&t=1s" width="auto"></ReactPlayer>
+  </div>
+```
+
+To make the web app responsive we will use the react bootstrap library. First we must install the library using `npm install react-bootstrap bootstrap`. We must also link the following style sheet in `index.html`.
+```HTML
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+```
+Bootstrap has a grid system where each row is divided into 12 columns. We are able to specify how many columns each component occupies. Since we have a grid and information component we will divide the page into two "columns".
+
+![alt text](https://miro.medium.com/max/700/0*z2Lkt066SfPxfWqM.png)
+
+Hence, we have one row `<Row>` to the components on the same level and we use `<Col md={6}>` to enclose each component to divide them into two seperate components. The information column has a `minWidth: 600px` to match the width of the grid itself. Once, the screen width break point is reached it will cause our second column to be shifted onto a new line and stack on top of each other.
+
+```javascript
+<Container fluid>
+  <Row style={{ justifyContent: "center" }}>
+    <Col md={6}>
+      <Grid colourArray={colourArray} canEdit={true} modifyArray={modifyColour} />
+      <div style={{ textAlign: "center", margin: "5% 0" }}>
+        <Link to="/history">View Canvas Hisotry</Link>
+      </div>
+    </Col>
+    <Col md={6} style={{ textAlign: "center", minWidth: "600px" }}>
+      <Information />
+    </Col>
+  </Row>
+</Container>
+```
+Since bootstrap has a default style of `border box` in `box-sizing`. Therefore, we must convert it back to default `div` property of `content-box` or our grid will slightly overflow underneath
+We must overide some default media enquiries which come with the default bootstrap library to achieve our desired responsiveness as the grid is set at `600px`, causing the columns to overflow.
+
+```CSS
+@media (min-width: 768px){
+    .col-md-6{
+        max-width: none !important;
+    }
+}
+```
+When ever the screen size is detected to be less than 768px wide we remove the `maxWidth` property so that the information is centrally aligned with the grid itself and does not adhere to the default `50%` property. The `!important` keyword is used to indicate that this style should take precedent over all other styling.
+
+```CSS
+#info{
+    margin: 0 12.5%;
+}
+``` 
+Margin is added to the information div so the information is lifted off the right and is centered along with the column we created.
+
