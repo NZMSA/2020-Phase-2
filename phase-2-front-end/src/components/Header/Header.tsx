@@ -1,7 +1,7 @@
 import * as React from 'react';
 import logo from '../../assets/purplePixel.gif';
 
-class HeaderComponent extends React.Component {
+class Header extends React.Component {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -51,4 +51,4 @@ class HeaderComponent extends React.Component {
   }
 }
 
-export default HeaderComponent;
+export default Header;

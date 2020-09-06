@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Typography, Container } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 // core components
 import Grid from "../Grid/Grid";
@@ -100,14 +101,14 @@ const HistoricalGrid = () => {
   return historicalData && colors && canvasModifiedDates ? (
     <main style={{ textAlign: "center" }}>
       <header>
-        <Typography variant="h6">List of Canvas IDs:</Typography>
+        <Typography variant='h6'>List of Canvas IDs:</Typography>
         {Object.keys(historicalData).map((canvasId, idx) => (
           <Button key={idx} onClick={() => onClickCanvasId(Number(canvasId))}>
             {canvasId}
           </Button>
         ))}
       </header>
-      <Container maxWidth="md">
+      <Container maxWidth='md'>
         <Grid colourArray={colors} />
       </Container>
       <footer>
@@ -122,6 +123,7 @@ const HistoricalGrid = () => {
             Next Date
           </Button>
         </div>
+        <Link to="/">Return to home</Link>
       </footer>
     </main>
   ) : (
