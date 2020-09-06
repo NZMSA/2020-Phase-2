@@ -34,26 +34,16 @@ h1{
     text-align: center;
 }
 
-#id{
-    margin: 0 25%;
+#info{
+    margin: 0 12.5%;
 }
 
 @media (min-width: 768px){
-    #info{
-        margin: 0 12.5%;
-    }
     .col-md-6{
         max-width: none !important;
     }
 }
 
-@media (max-width: 768px){
-    #info{
-        margin: 0 12.5%;
-    }
-
-}
-
-.pixel-span{
+.pixel-span {
     margin-bottom: 20px;
 }

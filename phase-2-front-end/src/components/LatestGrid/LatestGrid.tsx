@@ -30,7 +30,6 @@ const LatestGrid = () => {
   if (colourArray.length === 0) {
     return <CircularProgress />;
   }
-
   return (
     <div>
       <Container fluid>

@@ -132,6 +132,7 @@ const HistoricalGrid = () => {
             Next Date
           </Button>
         </div>
+        <Link to="/">Return to home</Link>
       </footer>
     </main>
   ) : (
