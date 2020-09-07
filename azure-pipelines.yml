@@ -11,8 +11,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  SolutionPath: 'phase-2-back-end/phase-2-back-end.sln'
-  ReactRootFolder: 'phase-2-front-end'
+  SolutionPath: '2-Backend-RESTful-API/phase-2-back-end.sln'
+  ReactRootFolder: '2-Backend-RESTful-API'
   ReactBuildFolder: '$(ReactRootFolder)/build'
   
 steps:
