@@ -2,7 +2,7 @@
 The official repository and source of knowledge for MSA students taking part in MSA 2020 Phase 2 Training. 
 
 # Assignment
-Full assignment brief can be found [here](0-Assessment/Assessment.pdf). Submissions close on **8AM 18th August 2020**.
+Full assignment brief can be found [here](0-Assessment/Assessment.pdf). Submissions close on **8AM 18th September 2020**.
 
 # Phase 2 Video Playlist
 * [Watch phase 2 introduction](https://youtu.be/asH2eKlDJ9w)
