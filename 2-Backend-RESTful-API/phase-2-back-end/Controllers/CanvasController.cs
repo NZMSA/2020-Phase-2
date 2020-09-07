@@ -35,7 +35,7 @@ namespace phase_2_back_end.Controllers
 		[Route("GetCanvas")]
 		public String GetCanvas()
 		{
-			string[,] outputArray = new string[32, 32];
+			string[,] outputArray = new string[SIZE, SIZE];
 			var canvas = _context.Canvas
 				.Include(c => c.ColorData)
 				.OrderByDescending(c => c.CanvasID)
@@ -76,6 +76,8 @@ namespace phase_2_back_end.Controllers
             return _context.Canvas.Any(e => e.CanvasID == id);
         }
 
+
+        //This PUT method updates the specified canvas cell of the lastest canvas in the db
         [HttpPut]
         [Route("UpdateCell")]
         public async Task<IActionResult> UpdateCell([FromBody] UpdateCellModel data)
@@ -118,7 +120,7 @@ namespace phase_2_back_end.Controllers
         }
 
 		// to populate a mock Canvas
-		[HttpPost]
+		/*[HttpPost]
 		[Route("PopulateDb_dont_run_this_unnecessarily")]
 		public void PopulateDb()
 		{
@@ -137,7 +139,7 @@ namespace phase_2_back_end.Controllers
 			}
 			_context.Canvas.Add(new Models.Canvas { ColorData = matrix });
 			_context.SaveChanges();
-		}
+		}*/
 		public static string ComputeSha256Hah(string psd, string Salt)
         {
             using (SHA256 Hash = SHA256.Create())
