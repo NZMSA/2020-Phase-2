@@ -12,8 +12,8 @@ pool:
 
 variables:
   SolutionPath: '2-Backend-RESTful-API/phase-2-back-end.sln'
-  ReactRootFolder: '2-Backend-RESTful-API'
-  ReactBuildFolder: '$(ReactRootFolder)/build'
+  # ReactRootFolder: '2-Backend-RESTful-API'
+  # ReactBuildFolder: '$(ReactRootFolder)/build'
   
 steps:
 # - task: NodeTool@0
@@ -49,7 +49,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: '**/phase-2-back-end.csproj'
+    projects: '2-Backend-RESTful-API/phase-2-back-end/phase-2-back-end.csproj'
     arguments: '-o $(Build.ArtifactStagingDirectory)/BackEnd'
     zipAfterPublish: true
     modifyOutputPath: true
