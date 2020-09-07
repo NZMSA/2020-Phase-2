@@ -49,7 +49,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: '**/*.csproj'
+    projects: '**/phase-2-back-end.csproj'
     arguments: '-o $(Build.ArtifactStagingDirectory)/BackEnd'
     zipAfterPublish: true
     modifyOutputPath: true
