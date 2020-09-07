@@ -2,12 +2,11 @@
 The official repository and source of knowledge for MSA students taking part in MSA 2020 Phase 2 Training. 
 
 # Assignment
-//TODO: Update this
-Full assignment brief can be found [here](https://github.com/NZMSA/2019-Phase-2/blob/master/Assessment/Advanced%20Training%202019%20Assessment%20Criteria.pdf). Submissions close **8AM 18th August 2020**.
+Full assignment brief can be found [here](0-Assessment/Assessment.pdf). Submissions close on **8AM 18th August 2020**.
 
 # Phase 2 Video Playlist
-//TODO: Update this
-* [Day 1](https://youtu.be/Z6U6g1wn8RE)
+* [Watch phase 2 introduction](https://youtu.be/asH2eKlDJ9w)
+* [General Stream Playlist](https://www.youtube.com/playlist?list=PLYCDbAy3AHGbgMRG3yYkjJKIXR1M5SOun)
 
 # Software Needed
 

@@ -1,14 +1,12 @@
 # Advanced Feature: Testing
 This year's testing section will be split into the following sections:
- - Backend Unit Testing
- - Frontend Unit Testing
- - Behavioural Driven Testing (Automated testing)
+ - Unit Testing
+ - Behavioural Driven Testing (Automated Acceptance testing)
 
 You will only have to implement one of the above if you choose to add testing as one of your advanced features.
 ## Assignment Criteria
-To pass this as advanced feature in your phase 2 project you must do one of the three testing.
+To pass this as advanced feature in your phase 2 project you must do one of the above.
 Your test must have atleast 3 tests overall.
-Doing sections of testing will (not)count towards your advance features
 
 # About Unit Testing
 
@@ -36,7 +34,7 @@ Sometimes requirements are liable to change and you can get a better understandi
 However, as new programmers / being new to a certain language or framework, it's quite infeasible to write our tests beforehand because we might not even understand how the code is going to work. This is precisely why we've waited until a later module of MSA phase 2 to show you how to do unit tests for an ASP.NET Core web API.
 
 ## Writing Unit Tests
-I’ll be using a modified backend project from phase 1 to do some example unit testing. Anyone who did the backend for phase 1 will be familiar with most of the code but there will be extra classes and some refactor done to make the testing easier. Be aware on you own project you many need to refactor code in order to to make testing easier.
+I’ll be using a modified backend project from phase 1 to do some example unit testing. Anyone who did the backend for phase 1 will be familiar with most of the code but there will be extra classes and some refactor done to make the testing easier. Be aware on you own project you many need to refactor code in order to to make testing easier. I highly recommend looking at the repository pattern and implementing this coding pattern to make testing easier.
 
 ## Creating the Project
 
@@ -46,14 +44,21 @@ File -> New -> Project
 
 Scroll down to NUnit Test Project (.Net Core), select it, then click "Next".
 
+![Create Project 1](./images/Annotation%202020-09-01%20020514.png
+)
+
 Give the project a name in the format "[project being tested].Tests, Make sure to select "Add to solution" as shown in the image below, then click "Create".
-![]
+![Create Project 2](./images/Annotation%202020-09-01%20020541.png
+)
 
 ### Setting up the Test Project
 Start by adding a reference from the newly created test project to the API project. Right-click on the unit test project in the solution explorer:
 
 Then go Add -> Project Reference... -> Select StudentSIMS
-![]
+
+![Create Project](./images/Annotation%202020-09-01%20020930.png
+)
+
 Now we are going to add a couple of packages that will let us use a mock database (More on this in a bit). Right-click on the project solution and select "Manage NuGet Packages for solution" Add to the solution:
 
 - Moq
@@ -69,9 +74,9 @@ There are 2 Test that I will show as an example. One for classes that have datab
 
 Right-click on the test project
 
-Delect (add -> New Item)
+Delect (Add -> New Item)
 
-Create a new .cs and call it CountryIdentifiersUnitTests.cs and add the follow code
+Create a new .cs and call it CountryIdentifiersUnitTests.cs and add the follow code to the class.
 
 ```C#
 [Test]
@@ -115,6 +120,7 @@ Create a new .cs and call it CountryIdentifiersUnitTests.cs and add the follow c
         }
 ```
 <details><summary>Arrange Snippet</summary>
+Here we are creating some dummy data as a list then making it a queryable list so that we can use linq on it
 
 ```C#
 var countries = new List<CountryIdentifiers>
@@ -133,7 +139,7 @@ var countries = new List<CountryIdentifiers>
                 }
             }.AsQueryable();
 ```
-Here we are creating some dummy data as a list then making it a queryable list so that we can use linq on it
+Here we are using moq package to fake our Dbset (table in our database) and setting it up so whenever any method calls the database we return our fake data that we have set (i.e. countries). We are doing this so that we can remove the dependency of using a database. InMemory can work for this situation however due it doesn't work too well for relational databases.
 
 ```C#
 var mockSet = new Mock<DbSet<CountryIdentifiers>>();
@@ -143,39 +149,43 @@ var mockSet = new Mock<DbSet<CountryIdentifiers>>();
             mockSet.As<IQueryable<CountryIdentifiers>>().Setup(m => m.GetEnumerator()).Returns(countries.GetEnumerator());
             
 ```
-Here we are using moq package to fake our Dbset (table in our database) and setting it up so whenever any method calls the database we return our fake data that we have set (i.e. countries). We are doing this so that we can remove the dependency of using a database. InMemory can work for this situation however due it doesn't work too well for relational databases.
+Now that we have set a Dbset we need to set it up  so that when the context gets called it returns the Dbset we are mocking.
+
 ```C#
             var mockContext = new Mock<StudentContext>();
             mockContext.Setup(c => c.CountryIdentifiers).Returns(mockSet.Object);
 ```
-Now that we have set a Dbset we need to set it up  so that when the context gets called it returns the Dbset we are mocking.
+
 </details>
 
 <details><summary>Act Snippet</summary>
+Here wer are creating our an instance of our class where we pass/inject in our mocked context. This means that anytime our context gets called we return data that we have set in the Arrange snippet.
 
 ```C#
             var service = new CountryIdentifiersRepository(mockContext.Object);
             var results = service.GetAllCountries().ToList();
 ```
-Here wer are creating our an instance of our class where we pass/inject in our mocked context. This means that anytime our context gets called we return data that we have set in the Arrange snippet.
+
 </details>
 
 <details><summary>Assert Snippet</summary>
+Here we are now checking the return results from our method that we tested. We are first checking if the it returned the correct amount. Then checking if the results are both the ones we have set. Normally you would have one assert per test but sometimes you can have multiple.
 
 ```C#
             Assert.AreEqual(2, results.Count());
             Assert.AreEqual("NZ", results[0].CountryCode);
             Assert.AreEqual("AU", results[1].CountryCode);
 ```
-Here we are now checking the return results from our method that we tested. We are first checking if the it returned the correct amount. Then checking if the results are both the ones we have set. Normally you would have one assert per test but sometimes you can have multiple.
+
 </details>
 
-### Testing code that regular code
-Right-click on the test project
+### Testing code that doesn't access the database.
 
-Delect (add -> New Item)
+Create a new file 
 
-Create a new .cs and call it StudentControllerTest.cs and add the follow code
+Right-click on the test project -> add -> New Item
+
+Create a new .cs and call it StudentControllerTest.cs and add the follow code.
 
 ```C#
         [Test]
@@ -203,9 +213,9 @@ Create a new .cs and call it StudentControllerTest.cs and add the follow code
         }
 ```
 <details><summary>Arrange Snippet</summary>
-Here We are create oour student with some mock data. we then set it so that whenever the functions in ICountryIdentifierRepository.cs get called (GetStudentById, GetCountryExtension) we override their actual logic and return the data we expect in a the function should return. The reason this is done is because we don't care what the functions other than the one we test are doing. We assume the other functions already have unit tests so there is no need to test it in this test case.
+Here we are creating our student with some mock data. We then create a mock version of ICountryIdentifierRepository.cs so that we can fake the return data from GetStudentById(), and GetCountryExtension(). The reason this is done is because we don't care what the functions other than the one we test are doing. We assume the other functions already have unit tests so there is no need to test it in this test case.
 
-Note: I am using a Interface version of the CountryIdentifierRepositry because it makes it easier to test. ICountryIdentifierRepositry is just basically a specification for what functions have to be implemented.
+Note: I am using a interface version of the CountryIdentifierRepositry because it makes it easier to test. ICountryIdentifierRepositry is just basically a specification for what functions have to be implemented.
 
 ```C#
             //Arrange
@@ -231,7 +241,7 @@ Here we create the controller and pass in our mock repository into it. We also c
 ```
 </details>
 <details><summary>Assert Snippet</summary>
-In the assert portion we check the results aren't null and that the valued return from the controller is what we expect.
+In the assert portion we check the results aren't null (meaning that there is a student with that Id) and that the valued return from the method is what we expected.
 
 ```C#
             Assert.IsNotNull(results);
@@ -241,10 +251,9 @@ In the assert portion we check the results aren't null and that the valued retur
 </details>
 
 <details><summary>Note about Student Controller</summary>
-So you may have notice that I have inject the mock repository into my controller. I have created a second contstructor explicitly for this repo. You may have to do this if you plan to unit test. I have also following the repository pattern allow me to test more easily. Repository pattern calls to seperate the Data access layer from your control logic and business logic. In this case my controller shouldn't have the context injected at all and it each http request currently in my code will have to move to a new repository (e.g. StudentRepository). Then the controller will simply take in the repository instead of the current context we have.
+So you may have notice that I have to inject the mock repository into my controller. I have created a second contstructor explicitly for this repo. You may have to do this if you plan to unit test. I have also been following the repository pattern to allow me to test more easily. Repository pattern calls to seperate the Data access layer from your control logic and business logic. In this case my controller shouldn't have the context injected at all. It also means my current student controller methods will have to move to a different file (e.g. StudentRepository). Then the controller will simply take in the repository instead of the current context we have.
 
 </details>
-
 
 # About Automated Acceptance test
 
@@ -253,7 +262,10 @@ So you may have notice that I have inject the mock repository into my controller
 ## When to Automated Acceptance test?
 
 ## Writing BDD Tests
+For the testing I will be testing the login feature for [http://en.reddit.com/](http://en.reddit.com/)
+
 Before we start you will need to install some extensions for us to run the tests. 
+
 ### Setup
 In Visual Studio 2019 -> Extension -> Manage Extensions
 
@@ -267,11 +279,13 @@ You will need to restart Visual Studio for the extension to install.
 
 Open Visual Studio -> Create New Project -> Search for SpecFlow Project
 
-![]
+![Create Specflow 1](./images/Annotation%202020-09-07%20014120.png)
+
+Give your project a name.
 
 Set the framework to .net core 3.1 and the test framework to Nunit
 
-![]
+![Create Specflow 1](./images/Annotation%202020-09-07%20014525.png)
 
 Delete the initial files the come with project:
 - Caculator.feature 
@@ -279,9 +293,10 @@ Delete the initial files the come with project:
 
 In the Features folder -> Add New Item - > Specflow Feature File and name it Login.Feature
 
-![]
+![Create Specflow 1](./images/Annotation%202020-09-07%20014635.png)
 
-Copy and Paste the following code
+Copy and Paste the following code into the file
+
 ```Gherkin
 Feature: Login
 
@@ -299,7 +314,7 @@ Scenario: Login to app
 Feature files are the steps our theoretical user would be doing if they had to interact with our application. In our case we have called it login which indicates we want to test the system’s behaviour when we try to login
 Extra: The language this is written in is called Gherkin. There are some neat things you can do with this file to make more complex test. For now, I will show something simple.
 
-##### Keywords
+#### Keywords
 Feature
 - Keyword is to provide a high-level description of a software feature, and to group related scenarios.
 
@@ -323,17 +338,17 @@ Before we can start writing code we need to install some nuget packages.
 
 Right click on the feature file in the code editor and select generate step definition. 
 
-![]
+![](./images/Annotation%202020-08-31%20024008.png)
 
 Click generate and save to the steps folder as LoginSteps.cs
 
-![]
+![](./images/Annotation%202020-09-07%20015238.png)
 
-At this point the feature file should pick up the steps from LoginStep.cs but do not worry if they do not get picked up sometimes Visual Studio takes time to make the connect. As soon as you run tests it should pick them up.
+> At this point the feature file should pick up the steps from LoginStep.cs but do not worry if they do not get picked up sometimes Visual Studio takes some time to make the connection. As soon as you build and/or run the tests it should pick them up.
 
-Add a new folder called Pages to the project and create a new class called FrontPage.cs. This class is where we will be writing our code to interact with the login page. 
+Add a new folder called Pages to the project and create a new class called FrontPage.cs. This class is where all our code is written to interact with initial reddit page.
 
-Add the following code.
+Add the following code to FrontPage.cs.
 ```C#
     public class FrontPage
     {
@@ -357,6 +372,7 @@ Add the following code.
     }
 ```
 <details><summary>Explaination for the code snippet</summary>
+First we have a constructor where we pass our web driver into in our case this will be chrome. We are passing the web driver as a dependency so that we can have a browser to interact with.
 
 ```C#
 public IWebDriver WebDriver { get; }
@@ -365,7 +381,11 @@ public FrontPage(IWebDriver webDriver)
     WebDriver = webDriver;
 }
 ```
-First we have a constructor where we pass our web driver into. We are passing the web driver as a dependency so that we can act on it using the functions we write here.
+The pieces of code below are looking at the website's elements and trying to find them by Name and by their XPath. XPath is the relative path of where the element lies in the DOM.
+
+You can find the Name by right clicking inspect on the element you wish to get. If no Name is provided for it you can get the XPath from right clicking and selecting Copy -> XPath
+
+![](./images/Annotation%202020-08-31%20030517.png)
 
 ```C#
 public IWebElement txtUsername => WebDriver.FindElement(By.Name("user"));
@@ -373,9 +393,13 @@ public IWebElement txtPassword => WebDriver.FindElement(By.Name("passwd"));
 public IWebElement btnLogin => WebDriver.FindElement(By.XPath("//*[@id=\"login_login-main\"]/div[4]/button"));
 public IWebElement lnkPreference => WebDriver.FindElement(By.XPath("//*[@id=\"header-bottom-right\"]/ul/li/a"));
 ```
-These pieces of code are looking at the website's elements and trying to find them by Name and by their XPath. XPath is the relative path of where the element lies in the DOM.
 
-You can find the Name by right clicking inspect on the element you wish to get. If no Name is provided for it you can get the XPath from right clicking and selecting Copy -> XPath
+ClickLoginButton() is using selenium's Submit function to allow us to interact with buttons on the site.
+
+Login() is also using selenium's sendkey to populate the login and password fields.
+
+IsXpathExists() is checking if there is a element that is shown at the Xpath we specified for lnkPerference. If this element only exist if the user has logged in which means it easy to check if the user has logged in from this check.
+
 
 ```C#
 public void ClickLoginButton() => btnLogin.Submit();
@@ -386,7 +410,7 @@ public void Login(string username, string password)
 }
 public bool IsXpathExists() => lnkPreference.Displayed;
 ```
-These first 2 methods are used to interact with the site and the laste is checking if the XPath for the element exist. This was found by logging in manually and inspecting a unique element only found when a user has logged in.
+
 </details>
 
 ```C#
@@ -420,13 +444,30 @@ public void ThenTheIShouldSeeMyUsername()
 }
 
 ```
+<details><summary>Explaination for the code snippet</summary>
 
 In our given statement we set up the web driver/chrome window and set it to the site we want
-We pass this onto the frontPage object so that we can use the selenium function we wrote in the previous steps
-We pass the data from our feature file which was formatted as a table. We use CreateDynamic to format this is something we can parse.
-Then we act on the the login feature using CLickLocginButton
-And then we check that the resulting output is true.
 
-As you can see we still have the arrange act assert format found in our previous section. This will be true for almost all types of testing.
-Right click the solution in and click run test.
-This will build and run the test. It will open chrome and automatically execute the steps we laid above.
+We pass this onto the frontPage object so that we can use the selenium function we wrote in the previous steps
+
+We pass the data from our feature file which was formatted as a table. We use CreateDynamic to format this is something we can parse.
+
+Then we act on the the login feature using CLickLoginButton
+And then we check that the resulting output is true.
+</details>
+
+We are now ready to run our tests. Right click the solution and click run test.
+![](./images/Annotation%202020-09-07%20020826.png)
+
+A chrome window will open up and you will see our automated test go through the steps we specified in our feature file and the code we wrote to execute those steps
+
+![](./images/Annotation%202020-09-07%20020948.png)
+
+# Useful Links
+- [Testing with a mocking framework](https://docs.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking)
+- [Unit Testing: MOQ Framework](https://www.youtube.com/watch?v=dZ2Psa_Bn2Q)
+- [Unit test controller logic in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-3.1)
+- [Unit test basics](https://docs.microsoft.com/en-us/visualstudio/test/unit-test-basics?view=vs-2019)
+- [Repository Pattern with C# and Entity Framework, Done Right | Mosh](https://www.youtube.com/watch?v=rtXpYpZdOzM)
+- [Unit Testing C# Code - Tutorial for Beginners](https://www.youtube.com/watch?v=HYrXogLj7vg)
+- [Getting started with BDD using Specflow .NET Core 3.1 (C#)](https://www.youtube.com/watch?v=O5oHiBD5Lvk)
