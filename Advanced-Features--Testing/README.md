@@ -256,10 +256,28 @@ So you may have notice that I have to inject the mock repository into my control
 </details>
 
 # About Automated Acceptance test
+Automated acceptance testing is simply code that is written to test the functionality of the system without regard for the implementation. An example of this is user acceptance test where we get the core business users to test if the system works as expected.
+For example, on the phase 2 full stack project we would have multiple scenarios we want to test 
 
-## Why do we Automated Acceptance test?
+- If I can click a cell and pick a colour, I expect the cell to change colour.
+- If I pick a cell already with a colour, I expect that the cell will change the colour of my choice
+- Etc
 
-## When to Automated Acceptance test?
+Acceptance testing is all about having different scenarios and inputs and making sure that we have the correct outputs when we interact with the system. While we can get a user to do this type of testing, it becomes an issue on very large systems. This is due to the need to verify all functionalities of the system still work after any changes and updates to the system (i.e. backend implement changes).
+
+
+## When and why to Automated Acceptance test?
+
+Acceptance testing is most common when the lifespan of a project is expected to continue for a long period of time. This means that the project will undergo many releases and many fixes over its lifetime. To ensure that the system’s core functions work as the system get updated, we have acceptance tests. These acceptances test go through most if not all the core functionality of the project. 
+Say for example you are a bank and are updating how transactions get recorded in the backend, but you want to keep the frontend the same. Once the changes are made, we need to check if the system works in different scenarios: 
+- Does the transaction show up?
+- Can a transaction be made? 
+- Can a transaction be received? 
+- Does all the information get returned correctly?
+- etc
+
+If changes are frequent enough that it requires people to repeated test many different scenarios, then it might be a good idea to implement some automated acceptance tests.
+If a project is only delivered once without the expectation of further support, then in might not make sense to add to the project. Another consideration is the cost of manually getting someone to execute the acceptance testing vs automating it. While on a smaller system it might not make sense to implement; on a larger system investing into automated acceptance test might more cost effective. 
 
 ## Writing BDD Tests
 For the testing I will be testing the login feature for [http://en.reddit.com/](http://en.reddit.com/)
