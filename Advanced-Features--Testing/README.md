@@ -279,7 +279,7 @@ Say for example you are a bank and are updating how transactions get recorded in
 If changes are frequent enough that it requires people to repeated test many different scenarios, then it might be a good idea to implement some automated acceptance tests.
 If a project is only delivered once without the expectation of further support, then in might not make sense to add to the project. Another consideration is the cost of manually getting someone to execute the acceptance testing vs automating it. While on a smaller system it might not make sense to implement; on a larger system investing into automated acceptance test might more cost effective. 
 
-## Writing BDD Tests
+## Writing Automated Acceptance Test Tests
 For the testing I will be testing the login feature for [http://en.reddit.com/](http://en.reddit.com/)
 
 Before we start you will need to install some extensions for us to run the tests. 
