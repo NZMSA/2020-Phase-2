@@ -6,7 +6,24 @@ This year's testing section will be split into the following sections:
 You will only have to implement one of the above if you choose to add testing as one of your advanced features.
 ## Assignment Criteria
 To pass this as advanced feature in your phase 2 project you must do one of the above.
-Your test must have atleast 3 tests overall.
+Your tests must have atleast 3 tests overall.
+## Overview
+
+- Unit Testing
+  - Are automated test we write to test our project.
+  - Our testing code will input data into the classes and methods and compare their outputs to what we expect it should return.
+  - They are written on individual units of software i.e. individual methods and classes.
+- Automated Acceptance Testing
+  - This automates manual testing that a user would do when a new feature releases e.g. Testing if the login and logout functions on a website.
+  - The language that we write our automated acceptance test can be completely different from what is used in the base project. However it is a good idea to keep them the same to allow maintainability across the team
+
+## Why do we do testing
+- Catch bugs and error early.
+- Catch unintended changes made to code.
+- Helps maintainability
+- Ensure quality code
+- Provides Documentation
+- Regression testing
 
 # About Unit Testing
 
@@ -263,8 +280,7 @@ For example, on the phase 2 full stack project we would have multiple scenarios 
 - If I pick a cell already with a colour, I expect that the cell will change the colour of my choice
 - Etc
 
-Acceptance testing is all about having different scenarios and inputs and making sure that we have the correct outputs when we interact with the system. While we can get a user to do this type of testing, it becomes an issue on very large systems. This is due to the need to verify all functionalities of the system still work after any changes and updates to the system (i.e. backend implement changes).
-
+Acceptance testing is all about having different scenarios and inputs and making sure that we have the correct outputs when we interact with the system. While we can get a user to do this type of testing, it becomes an issue on very large systems due to the time it takes to test. It also becomes an even larger waste if the system changes again and we have to repeat the test again. This is due to the need to verify all functionalities of the system still work after any changes and updates to the system (i.e. backend implement changes). To avoid this we implement automated acceptance test to save time and cost.
 
 ## When and why to Automated Acceptance test?
 
