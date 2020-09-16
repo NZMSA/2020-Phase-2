@@ -110,7 +110,7 @@ You will notice the following Migrations folder in your solution.
 
 ![database](Images/image9.png)
 
-Now, type `Updae-Database` in `Package Manager Console` to the update your SQL database.
+Now, type `Update-Database` in `Package Manager Console` to the update your SQL database.
 
 ![database](Images/image10.png)
 
